@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/css/login.css" />
+    <link rel="stylesheet" href="/css/login.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <script src="https://kit.fontawesome.com/f5cdbd7084.js" crossorigin="anonymous"></script>
@@ -52,21 +52,21 @@
 
     <div class="container">
         <div class="form-container">
-            <form>
+            <form action="/login" method="POST">
                 <h2>Inicia Sesión</h2>
                 <div class="mb-3">
                     <label for="exampleInputEmail1" class="form-label fw-bold">Email address</label>
                     <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
-                        placeholder="ingresa tu email">
+                        placeholder="ingresa tu email" required>
 
                 </div>
                 <div class="mb-3">
                     <label for="exampleInputPassword1" class="form-label fw-bold">Password</label>
                     <input type="password" class="form-control" id="exampleInputPassword1"
-                        placeholder="ingresa tu contraseña">
+                        placeholder="ingresa tu contraseña" required>
                 </div>
                 <div class="d-flex justify-content-center">
-                    <a href="/regitro" class="btn btn-primary">Inicia Sesión</a>
+                    <a href="/registro" class="btn btn-primary">Inicia Sesión</a>
                 </div>
             </form>
         </div>
@@ -121,6 +121,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
         integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
         crossorigin="anonymous"></script>
+           <script src="/js/script.js"></script>
 </body>
 
 </html>

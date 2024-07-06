@@ -41,3 +41,9 @@ FOREIGN KEY (id_ticket) REFERENCES tickets(id)
 SELECT * FROM tipos;
 SELECT * FROM tickets;
 SELECT * FROM comentarios;
+
+
+-- Insertar datos semilla
+INSERT INTO usuarios (nombre, email, password, tipo_usuario) VALUES
+  ('Administrador', 'administrador@mail.com', '$2b$10$ZdKzH0bmdxZZ8k2/FlXk8Od1fWFPJxkpAWvmTzMygkjUyDfIl0jaG', 'administrador'), -- Contraseña: Abc123#
+  ('Estudiante', 'estudiante@mail.com', '$2b$10$ZdKzH0bmdxZZ8k2/FlXk8Od1fWFPJxkpAWvmTzMygkjUyDfIl0jaG', 'cliente'); -- Contraseña: Abc123#
