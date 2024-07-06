@@ -39,8 +39,8 @@
                 </div>
                 <div class="offcanvas-body" id="navbarNav">
                     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                        <li class="nav-item">
-                            <a href="/registro" class="btn btn-outline-primary mt-5" role="button">Volver a Home</a>
+                       <li class="nav-item">
+                            <a href="/" class="btn btn-outline-primary mt-2" role="button">Volver a Home</a>
                         </li>
                     </ul>
                 </div>
@@ -48,31 +48,25 @@
         </div>
     </nav>
 
-
-
     <div class="container">
         <div class="form-container">
             <form>
                 <h2>Registro</h2>
                 <div class="mb-3">
-                    <label for="exampleInputEmail1" class="form-label fw-bold">Usuario</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
-                        placeholder="ingresa tu email">
-
+                    <label for="inputUsuario" class="form-label fw-bold">Usuario</label>
+                    <input type="text" class="form-control custom-border" id="inputUsuario" placeholder="Ingresa tu nombre de usuario">
                 </div>
                 <div class="mb-3">
-                    <label for="exampleInputEmail1" class="form-label fw-bold">Email address</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
-                        placeholder="ingresa tu email">
-
+                    <label for="inputEmail" class="form-label fw-bold">Email address</label>
+                    <input type="email" class="form-control custom-border" id="inputEmail" aria-describedby="emailHelp" placeholder="Ingresa tu email">
                 </div>
                 <div class="mb-3">
-                    <label for="exampleInputPassword1" class="form-label fw-bold">Password</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1"
-                        placeholder="ingresa tu contraseña">
+                    <label for="inputPassword" class="form-label fw-bold">Password</label>
+                    <input type="password" class="form-control custom-border" id="inputPassword" placeholder="Ingresa tu contraseña">
                 </div>
-                <div class="d-flex justify-content-center">
-                    <a href="#" class="btn btn-primary">Inicia Sesión</a>
+                <div class="d-flex justify-content-center mt-3">
+                    <a href="/login" role="button"  type="submit" class="btn btn-primary">Registrar</a>
+                   
                 </div>
             </form>
         </div>

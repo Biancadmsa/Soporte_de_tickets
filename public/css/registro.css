@@ -1,3 +1,7 @@
+/* *{
+    background: #181818;
+} */
+
 html, body {
     height: 100%;
     margin: 0;
@@ -52,7 +56,7 @@ footer {
 }
 
 .form-container {
-    border: 1px solid black;
+    border: 1px solid #00008b;
     padding: 20px;
     border-radius: 5px;
     display: flex;
@@ -61,6 +65,12 @@ footer {
     width: 100%;
     max-width: 400px;
 }
+.form-control.custom-border {
+    border: 1px solid #00008b; /* Azul oscuro */
+}
+
+
+
 
 @media (max-width: 768px) {
     .form-container {

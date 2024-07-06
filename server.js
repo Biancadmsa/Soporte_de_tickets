@@ -1,119 +1,60 @@
-const express = require('express');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const fileUpload = require('express-fileupload');
-const exphbs = require('express-handlebars');
-const pool = require('./db/db');
-const path = require('path');
-require('dotenv').config();
+const express = require("express");
+const exphbs = require("express-handlebars");
+const jwt = require("jsonwebtoken");
+const fileUpload = require("express-fileupload");
+const bodyParser = require("body-parser");
+const path = require("path");
+const cookieParser = require("cookie-parser");
+const fs = require("fs");
+const { v4: uuidv4 } = require("uuid");
+const pool = require("./db/db");
+const helpers = require("handlebars-helpers")();
+require('dotenv').config(); // Cargar variables de entorno
 
 const PORT = process.env.PORT || 3000;
 
 const app = express();
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: false }));
 app.use(fileUpload());
-app.use(express.static('public')); // Servir archivos estáticos desde 'public'
-
-// Configurar el motor de plantillas Handlebars
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');
+app.use(express.static(path.join(__dirname, 'public'))); 
+app.use(cookieParser());
 
 app.engine('hbs', exphbs.engine({ extname: 'hbs', defaultLayout: false }));
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
 
-const SECRET = process.env.SECRET;
+const SECRET = process.env.SECRET_KEY; // Asegurar que se está utilizando la variable correcta
 
-// app.use(express.static(path.join(__dirname, 'public')));
-// app.use(express.static("public"));
-// app.use("/static", express.static(path.join(__dirname, "src")));
-// app.use("/src/css", express.static(path.join(__dirname, "src", "css")));
-
-
-
-// Función auxiliar para autenticar JWT
+// Middleware para autenticar JWT
 const autenticarToken = (req, res, next) => {
-    const token = req.headers['authorization'];
-    if (!token) return res.status(401).send("No se encontró token");
-  
-    jwt.verify(token, SECRETO, (err, usuario) => {
-      if (err) return res.status(403).send("Token no válido");
-      req.usuario = usuario;
-      next();
-    });
-  };
+    const token = req.cookies.token; // Extraer el token de la cookie
+    console.log('Token recibido:', token); // Log para depuración
+    if (!token) {
+        return res.status(401).send("Acceso denegado. No se proporcionó token.");
+    }
 
+    try {
+        const decoded = jwt.verify(token, SECRET);
+        req.usuario = decoded.usuario; // El objeto usuario se asigna correctamente
+        next();
+    } catch (err) {
+        console.error('Error de autenticación:', err); // Log para depuración
+        res.status(403).send("Token no válido");
+    }
+};
 
-  // Función auxiliar para verificar rol de administrador
-  const verificarAdmin = (req, res, next) => {
-    if (req.usuario.tipo_usuario !== 'administrador') return res.status(403).send("No tiene permisos de administrador");
+// Middleware para verificar rol de administrador
+const verificarAdmin = (req, res, next) => {
+    console.log('Usuario autenticado:', req.usuario); // Log para depuración
+    if (req.usuario.tipo_usuario.toLowerCase() !== 'administrador') {
+        return res.status(403).send("No tiene permisos de administrador");
+    }
     next();
-  };
+};
 
-
-// Ruta para mostrar la página de inicio de sesión
-app.get('/lhome', (req, res) => {
-    res.render('login');
-  });
-
-
-// Ruta para mostrar la página de inicio de sesión
-app.get('/login', (req, res) => {
-    res.render('login');
-  });
-
-// Rutas para registro y login de usuarios
-app.post('/registro', async (req, res) => {
-    const { nombre, email, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-    try {
-      const resultado = await pool.query(
-        'INSERT INTO usuarios (nombre, email, password) VALUES ($1, $2, $3) RETURNING *',
-        [nombre, email, hashedPassword]
-      );
-      res.json(resultado.rows[0]);
-    } catch (err) {
-      res.status(500).send("Error al registrar el usuario");
-    }
-  });
-
-
-
-app.post('/login', async (req, res) => {
-    const { email, password } = req.body;
-    try {
-      const resultado = await pool.query('SELECT * FROM usuarios WHERE email = $1', [email]);
-      const usuario = resultado.rows[0];
-      if (!usuario) return res.status(400).send("Usuario no encontrado");
-  
-      if (await bcrypt.compare(password, usuario.password)) {
-        const token = jwt.sign({ userId: usuario.id, tipo_usuario: usuario.tipo_usuario }, SECRETO);
-        res.json({ token });
-      } else {
-        res.status(400).send("Contraseña incorrecta");
-      }
-    } catch (err) {
-      res.status(500).send("Error al iniciar sesión");
-    }
-  });
-
-
-
-
-
-
-
-// Ruta principal
-app.get('/', (req, res) => {
-    res.render('home', { title: 'Mi Home' });
-});
-
-app.listen(PORT, () => {
-    console.log(`Servidor corriendo en http://localhost:${PORT}`);
-});
-
-
-
+// Rutas para mostrar las páginas
 app.get('/', (req, res) => {
     res.render('home');
 });
@@ -126,20 +67,79 @@ app.get('/registro', (req, res) => {
     res.render('registro');
 });
 
-app.get('/tickets', (req, res) => {
-    // obtener la lista de tickets
+app.get('/tickets', autenticarToken, verificarAdmin, (req, res) => {
     res.render('tickets', { tickets: [] });
 });
 
-app.get('/ticket/nuevo', (req, res) => {
-    res.render('nuevo_ticket');
+app.get('/ticket/nuevo', autenticarToken, (req, res) => {
+    res.render('ticket_nuevo');
 });
 
-app.get('/ticket/:id', (req, res) => {
+app.get('/ticket/:id', autenticarToken, (req, res) => {
     const ticketId = req.params.id;
     // obtener los detalles del ticket
-    res.render('detalle_ticket', { ticket: {} });
+    res.render('ticket_id', { ticket: {} });
 });
 
+// Rutas para registro y login de usuarios
+app.post('/registro', async (req, res) => {
+    const { nombre, email, password, tipo_usuario } = req.body;
+    try {
+        const resultado = await pool.query(
+            'INSERT INTO usuarios (nombre, email, password, tipo_usuario) VALUES ($1, $2, $3, $4) RETURNING *',
+            [nombre, email, password, tipo_usuario]
+        );
+        console.log("Usuario registrado:", resultado.rows[0]); // Log para depuración
+        res.json(resultado.rows[0]);
+    } catch (err) {
+        console.error("Error al registrar el usuario:", err); // Log para depuración
+        res.status(500).send("Error al registrar el usuario");
+    }
+});
 
+app.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        console.log(`Intento de inicio de sesión para el email: ${email}`); // Log de depuración
+        const resultado = await pool.query('SELECT * FROM usuarios WHERE email = $1', [email]);
+        const usuario = resultado.rows[0];
 
+        if (!usuario) {
+            console.log("Usuario no encontrado"); // Log de depuración
+            return res.status(400).send("Usuario no encontrado");
+        }
+
+        console.log("Usuario encontrado:", usuario); // Log de depuración
+
+        if (password !== usuario.password) {
+            console.log("Contraseña incorrecta"); // Log de depuración
+            return res.status(400).send("Contraseña incorrecta");
+        }
+
+        // Generar token JWT
+        const token = jwt.sign({ usuario }, SECRET, { expiresIn: '1h' });
+        res.cookie('token', token, { httpOnly: true });
+
+        // Redirigir a la ruta /tickets después del inicio de sesión exitoso
+        res.redirect('/tickets');
+    } catch (err) {
+        console.error("Error al iniciar sesión:", err); // Log de depuración
+        res.status(500).send("Error al iniciar sesión");
+    }
+});
+
+app.get('/tickets', autenticarToken, async (req, res) => {
+    try {
+        const resultado = await pool.query('SELECT * FROM tickets');
+        const tickets = resultado.rows;
+        res.render('tickets', { tickets });
+    } catch (err) {
+        console.error("Error al obtener tickets:", err);
+        res.status(500).send("Error al obtener tickets");
+    }
+});
+
+// Iniciar el servidor
+app.listen(PORT, () => {
+    console.log(`Servidor corriendo en http://localhost:${PORT}`);
+});
