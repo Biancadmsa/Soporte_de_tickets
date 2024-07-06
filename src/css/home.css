@@ -1,0 +1,105 @@
+body {
+    margin: 0;
+    border: 0;
+    padding: 0;
+    background-color: #ffffff;
+    font-family: 'Roboto', sans-serif !important;
+  }
+  
+
+/* navbar */
+.navbar-custom {
+    background-color: #181818;
+}
+
+.btn-custom {
+    background-color: #007bff;
+    color: white;
+}
+
+.text-logo {
+    font-size: 1.5rem;
+}
+
+.nav-link {
+    color: white !important;
+}
+
+.navbar-dark .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><path stroke='rgba(255, 255, 255, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>");
+}
+
+.btn-outline-primary {
+    margin-right: 10px;
+}
+
+
+
+/* card */
+.card{
+    margin-top:3rem;
+    max-width: 100%;
+   
+}
+
+.card .col-md-4 {
+    max-width: 100%; 
+}
+
+
+.card .col-md-4 img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+
+.card:last-child .card-img-top {
+    max-height: 300px; /* Puedes ajustar este valor según sea necesario */
+    object-fit: cover;
+}
+
+.text-justify {
+    text-align: justify;
+}
+
+
+.content {
+    min-height: 100vh; /
+}
+
+
+
+
+/* footer */
+
+footer {
+    background-color: #141414;
+    text-align: center;
+    padding: 20px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+
+.whatsapp-icon {
+    color: #ffffff;
+  }
+  
+  .github-icon {
+    color: #ffffff;
+  }
+  
+  .linkedin-icon {
+    color: rgb(255, 255, 255);
+  }
+  
+  a {
+    text-decoration: none;
+  }
+  
+  a:hover,
+  a:focus {
+    text-decoration: none;
+  }
