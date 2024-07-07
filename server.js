@@ -36,10 +36,9 @@ const SECRET = process.env.SECRET_KEY; // Asegurar que se está utilizando la va
 
 // Middleware para autenticar JWT
 const autenticarToken = (req, res, next) => {
-  const token = req.cookies.token; // Extraer el token de la cookie
-  console.log("Token recibido:", token); // Log para depuración
+  const token = req.cookies.token;
   if (!token) {
-    return res.status(401).send("Acceso denegado. No se proporcionó token.");
+    return res.redirect("/login");
   }
 
   try {
@@ -48,13 +47,13 @@ const autenticarToken = (req, res, next) => {
     next();
   } catch (err) {
     console.error("Error de autenticación:", err); // Log para depuración
-    res.status(403).send("Token no válido");
+    res.redirect("/login");
   }
 };
 
 // Middleware para verificar rol de administrador
 const verificarAdmin = (req, res, next) => {
-  console.log("Usuario autenticado:", req.usuario); // Log para depuración
+  // console.log("Usuario autenticado:", req.usuario); // Log para depuración
   if (req.usuario.tipo_usuario.toLowerCase() !== "administrador") {
     return res.status(403).send("No tiene permisos de administrador");
   }
@@ -63,58 +62,34 @@ const verificarAdmin = (req, res, next) => {
 
 // Rutas para mostrar las páginas
 app.get("/", (req, res) => {
-  res.render("home", { cssFile: "home.css", title: "Sistema de Tickets para Soporte Técnico" });
+  res.render("home", {
+    cssFile: "home.css",
+    title: "Sistema de Tickets para Soporte Técnico",
+  });
 });
 
-app.get("/login", (req, res) => {
-  res.render("login", { cssFile: "login.css", title: "Iniciar Sesión" });
-});
 
 app.get('/registro', (req, res) => {
-    res.render('registro', { cssFile: "registro.css", title: "Registro de Usuario" });
-});
-
-app.get("/tickets", autenticarToken, verificarAdmin, (req, res) => {
-  res.render("tickets", { cssFile: "tickets.css", title: "Tickets", tickets: [] });
-});
-
-app.get("/ticket/nuevo", autenticarToken, (req, res) => {
-  res.render("ticket_nuevo", { cssFile: "ticket_nuevo.css", title: "Nuevo Ticket" });
-});
-
-app.get("/ticket/:id", autenticarToken, (req, res) => {
-  const ticketId = req.params.id;
-  // obtener los detalles del ticket
-  res.render("ticket_id", { cssFile: "ticket_id.css", title: "Detalle del Ticket", ticket: {} });
-});
-
-app.get("/success", (req, res) => {
-  res.render("success", { cssFile: "success.css", title: "Registro Exitoso" });
+  res.render('registro', { cssFile: "registro.css", title: "Registro de Usuario" });
 });
 
 app.post("/registro", async (req, res) => {
   const { nombre, email, password, tipo_usuario } = req.body;
-
   if (!nombre || !email || !password) {
     return res.status(400).json({ error: "Todos los campos son obligatorios" });
   }
-
   const tipoUsuarioFinal = tipo_usuario || "cliente";
-
   try {
     const resultado = await pool.query(
       "INSERT INTO usuarios (nombre, email, password, tipo_usuario) VALUES ($1, $2, $3, $4) RETURNING *",
       [nombre, email, password, tipoUsuarioFinal]
     );
     const usuario = resultado.rows[0];
-    console.log("Usuario registrado:", usuario);
 
- 
-    const token = jwt.sign({ usuario }, SECRET, { expiresIn: "1h" });
+    const token = jwt.sign({ usuario }, SECRET, { expiresIn: "1h" }); // Generar token JWT
     res.cookie("token", token, { httpOnly: true });
 
-    // Redirigir a la página de bienvenida después del registro exitoso
-    res.redirect("/success");
+    res.redirect("/success"); // Redirigir a la página de éxito
   } catch (err) {
     console.error("Error al registrar el usuario:", err);
     res.status(500).send("Error al registrar el usuario");
@@ -122,49 +97,76 @@ app.post("/registro", async (req, res) => {
 });
 
 
+// 3. Inicio de Sesión (Acceso Público)
 
-app.get("/success", (req, res) => {
-  res.render("success", { cssFile: "success.css", title: "Éxito" });
+
+app.get("/login", (req, res) => {
+  res.render("login", { cssFile: "login.css", title: "Iniciar Sesión" });
+});
+
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const resultado = await pool.query("SELECT * FROM usuarios WHERE email = $1", [email]);
+    const usuario = resultado.rows[0];
+    if (!usuario || password !== usuario.password) {
+      return res.status(400).send("Usuario o contraseña incorrectos");
+    }
+    const token = jwt.sign({ usuario }, SECRET, { expiresIn: "1h" }); // Generar token JWT
+    res.cookie("token", token, { httpOnly: true });
+    res.redirect("/tickets"); //Redirigir a la ruta
+  } catch (err) {
+    console.error("Error al iniciar sesión:", err);
+    res.status(500).send("Error al iniciar sesión");
+  }
+});
+
+
+
+app.get("/tickets", autenticarToken, verificarAdmin, (req, res) => {
+  res.render("tickets", {
+    cssFile: "tickets.css",
+    title: "Tickets",
+    tickets: [],
+  });
+});
+
+app.get("/ticket/nuevo", autenticarToken, (req, res) => {
+  res.render("ticket_nuevo", {
+    cssFile: "ticket_nuevo.css",
+    title: "Nuevo Ticket",
+  });
+});
+
+app.get("/ticket/:id", autenticarToken, (req, res) => {
+  const ticketId = req.params.id;
+  // obtener los detalles del ticket
+  res.render("ticket_id", {
+    cssFile: "ticket_id.css",
+    title: "Detalle del Ticket",
+    ticket: {},
+  });
 });
 
 
 
 
-app.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    console.log(`Intento de inicio de sesión para el email: ${email}`); // Log de depuración
-    const resultado = await pool.query(
-      "SELECT * FROM usuarios WHERE email = $1",
-      [email]
-    );
-    const usuario = resultado.rows[0];
 
-    if (!usuario) {
-      console.log("Usuario no encontrado"); // Log de depuración
-      return res.status(400).send("Usuario no encontrado");
-    }
-    console.log("Usuario encontrado:", usuario); // Log de depuración
-    if (password !== usuario.password) {
-      console.log("Contraseña incorrecta"); // Log de depuración
-      return res.status(400).send("Contraseña incorrecta");
-    }
-    // Generar token JWT
-    const token = jwt.sign({ usuario }, SECRET, { expiresIn: "1h" });
-    res.cookie("token", token, { httpOnly: true });
-    // Redirigir a la ruta /tickets después del inicio de sesión exitoso
-    res.redirect("/tickets");
-  } catch (err) {
-    console.error("Error al iniciar sesión:", err); // Log de depuración
-    res.status(500).send("Error al iniciar sesión");
-  }
+
+
+app.get("/success", (req, res) => {
+  res.render("success", { cssFile: "success.css", title: "Éxito" });
 });
 
 app.get("/tickets", autenticarToken, async (req, res) => {
   try {
     const resultado = await pool.query("SELECT * FROM tickets");
     const tickets = resultado.rows;
-    res.render("tickets", { cssFile: "tickets.css", title: "Tickets", tickets });
+    res.render("tickets", {
+      cssFile: "tickets.css",
+      title: "Tickets",
+      tickets,
+    });
   } catch (err) {
     console.error("Error al obtener tickets:", err);
     res.status(500).send("Error al obtener tickets");
