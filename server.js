@@ -114,41 +114,48 @@ app.get("/success", (req, res) => {
 });
 
 app.get("/tickets", autenticarToken, async (req, res) => {
+  const { tipo, fecha } = req.query;
   try {
-    let resultado;
-    if (req.usuario.tipo_usuario === "administrador") {
-      // Recuperar todos los tickets para el administrador
-      resultado = await pool.query(`
-        SELECT tickets.*, usuarios.nombre AS nombre_usuario, tipos.nombre AS tipo
-        FROM tickets
-        JOIN usuarios ON tickets.id_usuario = usuarios.id
-        JOIN tipos ON tickets.id_tipo = tipos.id
-      `);
+    let query = `
+      SELECT tickets.*, usuarios.nombre AS nombre_usuario, tipos.nombre AS tipo
+      FROM tickets
+      JOIN usuarios ON tickets.id_usuario = usuarios.id
+      JOIN tipos ON tickets.id_tipo = tipos.id
+    `;
+    let queryParams = [];
+
+    if (req.usuario.tipo_usuario !== "administrador") {
+      query += " WHERE tickets.id_usuario = $1";
+      queryParams.push(req.usuario.id);
     } else {
-      // Recuperar solo los tickets del usuario autenticado
-      resultado = await pool.query(
-        `
-        SELECT tickets.*, usuarios.nombre AS nombre_usuario, tipos.nombre AS tipo
-        FROM tickets
-        JOIN usuarios ON tickets.id_usuario = usuarios.id
-        JOIN tipos ON tickets.id_tipo = tipos.id
-        WHERE tickets.id_usuario = $1
-      `,
-        [req.usuario.id]
-      );
+      query += " WHERE 1=1";
     }
+
+    if (tipo) {
+      queryParams.push(tipo);
+      query += ` AND tipos.nombre = $${queryParams.length}`;
+    }
+
+    if (fecha) {
+      queryParams.push(fecha);
+      query += ` AND DATE(tickets.fecha_creacion) = $${queryParams.length}`;
+    }
+
+    const resultado = await pool.query(query, queryParams);
     const tickets = resultado.rows;
+
     res.render("tickets", {
       cssFile: "tickets.css",
       title: "Tickets",
       tickets,
-      usuario: req.usuario,
+      usuario: req.usuario
     });
   } catch (err) {
     console.error("Error al obtener tickets:", err);
     res.status(500).send("Error al obtener tickets");
   }
 });
+
 
 app.get("/ticket/nuevo", autenticarToken, (req, res) => {
   res.render("ticket_nuevo", {
@@ -157,6 +164,7 @@ app.get("/ticket/nuevo", autenticarToken, (req, res) => {
     usuario: req.usuario,
   });
 });
+
 app.post("/ticket/nuevo", autenticarToken, async (req, res) => {
   try {
     const { tipo, descripcion } = req.body;
@@ -183,35 +191,62 @@ app.post("/ticket/nuevo", autenticarToken, async (req, res) => {
     const ticket = resultado.rows[0];
 
     // Redirigir a la página de tickets
-    res.redirect("/tickets");
+    res.redirect(`/ticket/${ticket.id}`);
   } catch (err) {
     console.error("Error al crear ticket:", err);
     res.status(500).send("Error al crear ticket");
   }
 });
-
-app.get("/ticket/:id", autenticarToken, async (req, res) => {
+app.get('/ticket/:id', autenticarToken, async (req, res) => {
   const ticketId = req.params.id;
   try {
-    const resultado = await pool.query(
-      "SELECT tickets.*, usuarios.nombre AS nombre_usuario, tipos.nombre AS tipo FROM tickets JOIN usuarios ON tickets.id_usuario = usuarios.id JOIN tipos ON tickets.id_tipo = tipos.id WHERE tickets.id = $1 AND tickets.id_usuario = $2",
-      [ticketId, req.usuario.id]
+    const ticketResult = await pool.query(
+      "SELECT tickets.*, usuarios.nombre AS nombre_usuario, tipos.nombre AS tipo FROM tickets JOIN usuarios ON tickets.id_usuario = usuarios.id JOIN tipos ON tickets.id_tipo = tipos.id WHERE tickets.id = $1",
+      [ticketId]
     );
-    const ticket = resultado.rows[0];
+    const comentariosResult = await pool.query(
+      "SELECT comentarios.*, usuarios.nombre AS nombre_usuario FROM comentarios JOIN usuarios ON comentarios.id_usuario = usuarios.id WHERE comentarios.id_ticket = $1 ORDER BY comentarios.fecha_creacion",
+      [ticketId]
+    );
+
+    const ticket = ticketResult.rows[0];
+    const comentarios = comentariosResult.rows;
+
     if (!ticket) {
       return res.status(404).send("Ticket no encontrado");
     }
-    res.render("ticket_id", {
-      cssFile: "ticket_id.css",
-      title: "Detalle del Ticket",
-      ticket,
-      usuario: req.usuario,
+
+    res.render("ticket_id", { 
+      cssFile: "ticket_id.css", 
+      title: "Detalle del Ticket", 
+      ticket, 
+      comentarios, 
+      usuario: req.usuario 
     });
   } catch (err) {
     console.error("Error al obtener ticket:", err);
     res.status(500).send("Error al obtener ticket");
   }
 });
+
+app.post('/ticket/:id/comentario', autenticarToken, async (req, res) => {
+  const ticketId = req.params.id;
+  const { mensaje } = req.body;
+  try {
+    if (req.usuario.tipo_usuario !== 'administrador') {
+      return res.status(403).send("No tienes permiso para agregar comentarios");
+    }
+    await pool.query(
+      "INSERT INTO comentarios (id_ticket, id_usuario, mensaje) VALUES ($1, $2, $3)",
+      [ticketId, req.usuario.id, mensaje]
+    );
+    res.redirect(`/ticket/${ticketId}`);
+  } catch (err) {
+    console.error("Error al agregar comentario:", err);
+    res.status(500).send("Error al agregar comentario");
+  }
+});
+
 
 app.get("/ticket/aleatorio", autenticarToken, async (req, res) => {
   try {
