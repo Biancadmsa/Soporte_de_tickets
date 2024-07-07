@@ -109,3 +109,45 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
+// registro.hbs
+
+document.addEventListener("DOMContentLoaded", function() {
+  var loginButton = document.getElementById('loginButton');
+  
+  if (loginButton) {
+      loginButton.addEventListener('click', function(event) {
+          if (!validateForm()) {
+              event.preventDefault(); // Prevenir el envío del formulario si la validación falla
+          }
+      });
+  }
+
+  function validateForm() {
+      var inputUsuario = document.getElementById('inputUsuario');
+      var inputEmail = document.getElementById('inputEmail');
+      var inputPassword = document.getElementById('inputPassword');
+
+      if (!inputUsuario || !inputEmail || !inputPassword) {
+          console.error("Uno o más elementos del formulario no se encontraron.");
+          return false;
+      }
+
+      if (inputUsuario.value.trim() === '' || inputEmail.value.trim() === '' || inputPassword.value.trim() === '') {
+          showToast("Todos los campos son obligatorios.");
+          return false;
+      }
+
+      return true;
+  }
+
+  function showToast(message) {
+      var toastElement = document.getElementById('liveToast');
+      var toastBody = toastElement.querySelector('.toast-body');
+      toastBody.textContent = message;
+      var toast = new bootstrap.Toast(toastElement);
+      toast.show();
+  }
+});
+  
+ 
+

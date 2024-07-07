@@ -1,20 +1,33 @@
 body {
-    background-image: url('../imgs/bienvenido.jpg'); /* Asegúrate de que la ruta sea correcta */
-    background-size: cover;
-    background-position: center;
-    height: 100vh;
-    margin: 0;
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+.background-image {
+    background-image: url('/imgs/bienvenido.jpg'); /* Asegúrate de que la ruta sea correcta */
+    background-size: cover;
+    background-position: center;
+    width: 70%;
+    height: 80%;
+    position: absolute;
+    z-index: -1;
 }
 .card {
     background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco con opacidad */
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 2px solid red;
+    opacity: 0.8;
 }
 #fechaRegistro {
     border: 1px solid black;
     padding: 5px;
     display: inline-block;
+}
+#contador {
+    font-size: 48px;
+    color: red;
+    margin-top: 20px;
 }

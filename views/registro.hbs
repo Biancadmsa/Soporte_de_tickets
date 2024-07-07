@@ -20,13 +20,10 @@
 </head>
 
 <body>
-
-
-
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
         <div class="container-fluid">
-            <p class="navbar-brand mb-0 text-logo">Sopote de Tickets</p>
+            <p class="navbar-brand mb-0 text-logo">Soporte de Tickets</p>
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
                 data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -47,51 +44,50 @@
                 </div>
             </div>
         </div>
-    </nav><div class="content flex-grow-1 d-flex flex-column justify-content-start align-items-center">
-    <div class="container">
-        <!-- Formulario de Registro -->
-        <div class="form-container">
-            <form action="/registro" method="POST">
-                <h2>Registro</h2>
-                <div class="mb-3">
-                    <label for="inputUsuario" class="form-label fw-bold">Usuario</label>
-                    <input type="text" class="form-control custom-border" id="inputUsuario" name="nombre"
-                        placeholder="Ingresa tu nombre de usuario">
-                </div>
-                <div class="mb-3">
-                    <label for="inputEmail" class="form-label fw-bold">Email address</label>
-                    <input type="email" class="form-control custom-border" id="inputEmail" name="email"
-                        aria-describedby="emailHelp" placeholder="Ingresa tu email">
-                </div>
-                <div class="mb-3">
-                    <label for="inputPassword" class="form-label fw-bold">Password</label>
-                    <input type="password" class="form-control custom-border" id="inputPassword" name="password"
-                        placeholder="Ingresa tu contraseña">
-                </div>
-                <div class="d-flex justify-content-center">
-                    <button id="loginButton" type="submit" class="btn btn-primary">Registrate</button>
-                </div>
+    </nav>
 
-                <!-- Toast -->
-                <div class="toast-container">
-                    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                        <div class="toast-header">
-                            <strong class="me-auto fw-bold text-danger">Atención, hay un error!</strong>
-                            <button type="button" class="btn-close" data-bs-dismiss="toast"
-                                aria-label="Close"></button>
-                        </div>
-                        <div class="toast-body">
-                            Ingresa todos los campos o regístrate.
+    <div class="content flex-grow-1 d-flex flex-column justify-content-start align-items-center">
+        <div class="container">
+            <!-- Formulario de Registro -->
+            <div class="form-container">
+                <form action="/registro" method="POST">
+                    <h2>Registro</h2>
+                    <div class="mb-3">
+                        <label for="inputUsuario" class="form-label fw-bold">Usuario</label>
+                        <input type="text" class="form-control custom-border" id="inputUsuario" name="nombre"
+                            placeholder="Ingresa tu nombre de usuario">
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputEmail" class="form-label fw-bold">Email address</label>
+                        <input type="email" class="form-control custom-border" id="inputEmail" name="email"
+                            aria-describedby="emailHelp" placeholder="Ingresa tu email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputPassword" class="form-label fw-bold">Password</label>
+                        <input type="password" class="form-control custom-border" id="inputPassword" name="password"
+                            placeholder="Ingresa tu contraseña">
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button id="loginButton" type="submit" class="btn btn-primary">Regístrate</button>
+                    </div>
+
+                    <!-- Toast -->
+                    <div class="toast-container">
+                        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                            <div class="toast-header">
+                                <strong class="me-auto fw-bold text-danger">Atención, hay un error!</strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="toast"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="toast-body">
+                                Ingresa todos los campos o regístrate.
+                            </div>
                         </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
-</div>
-
-
-
 
     <footer class="text-center mt-5 py-3 bg-dark text-light">
         <div class="container-fluid">
@@ -109,14 +105,15 @@
                     </a>
                 </div>
                 <div class="col-2 col-md-1 px-0">
-                    <a class="d-block text-light text-center ms-0" href="https://www.linkedin.com/in/biancasalcedodev/"
-                        target="_blank">
+                    <a class="d-block text-light text-center ms-0"
+                        href="https://www.linkedin.com/in/biancasalcedodev/" target="_blank">
                         <i class="fab fa-linkedin-in fa-2x" data-toggle="tooltip" data-placement="top"
                             title="Visita mi perfil en LinkedIn"></i>
                     </a>
                 </div>
                 <div class="col-2 col-md-1 px-0">
-                    <a class="d-block text-light text-center ms-0" href="https://github.com/Biancadmsa" target="_blank">
+                    <a class="d-block text-light text-center ms-0" href="https://github.com/Biancadmsa"
+                        target="_blank">
                         <i class="fab fa-github fa-2x" data-toggle="tooltip" data-placement="top"
                             title="Visita mi perfil en Github"></i>
                     </a>
@@ -142,7 +139,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
         integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
         crossorigin="anonymous"></script>
-    <script src="/js/script.js"></script>
-</body>
+           <script src="/js/script.js"></script>
 
-</html>
+</body>
+</html> 
