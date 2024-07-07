@@ -51,7 +51,18 @@ INSERT INTO usuarios (nombre, email, password, tipo_usuario) VALUES
   ('Bianca', 'estudiante@mail.com', 'Abc123#', 'cliente');
 
 
+SELECT tickets.*, usuarios.nombre AS nombre_usuario, tipos.nombre AS tipo
+      FROM tickets
+      JOIN usuarios ON tickets.id_usuario = usuarios.id
+      JOIN tipos ON tickets.id_tipo = tipos.id
+      WHERE tickets.id_usuario = $1
+
+
 
 DELETE FROM usuarios WHERE id > 2;
 
 UPDATE usuarios SET tipo_usuario = 'cliente' WHERE id = 2;
+
+
+
+INSERT INTO tipos (nombre) VALUES ('Urgente'), ('Importante'), ('Neutro');

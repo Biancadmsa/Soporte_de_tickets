@@ -1,7 +1,7 @@
 {{!< main}}
 
-    {{!-- NAVBAR --}}
- <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+{{!-- NAVBAR --}}
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
     <div class="container-fluid">
         <p class="navbar-brand mb-0 text-logo">Soporte de Tickets</p>
         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
@@ -26,7 +26,7 @@
                         {{usuario.email}}
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="/login">Cerrar Sesión</a></li>
+                        <li><a class="dropdown-item" href="/logout">Cerrar Sesión</a></li>
                     </ul>
                 </div>
             </div>
@@ -34,60 +34,58 @@
     </div>
 </nav>
 
-    <div class="content flex-grow-1 d-flex flex-column justify-content-start align-items-center">
-        <div class="container">
-            <div class="d-flex justify-content-center">
-                <form class="row g-3">
-                    <div class="col-md-6">
-                        <label for="tipo" class="form-label">Tipo</label>
-                        <select id="tipo" class="form-control">
-                            <option value="" selected>Tipo</option>
-                            <option value="1">Cliente</option>
-                            <option value="2">Administrador</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="fecha" class="form-label">Fecha de creación</label>
-                        <input type="text" id="fecha" class="form-control" placeholder="Fecha de creación">
-                    </div>
-                    <div class="col-md-12 d-flex justify-content-center">
-                        <button id="buscar" class="btn btn-primary mt-3">Buscar</button>
-                    </div>
-                </form>
-            </div>
+<div class="content flex-grow-1 d-flex flex-column justify-content-start align-items-center">
+    <div class="container">
+        <div class="d-flex justify-content-center">
+            <form class="row g-3">
+                <div class="col-md-6">
+                    <label for="tipo" class="form-label">Tipo</label>
+                    <select id="tipo" class="form-control">
+                        <option value="" selected>Tipo</option>
+                        <option value="Urgente">Urgente</option>
+                        <option value="Importante">Importante</option>
+                        <option value="Neutro">Neutro</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="fecha" class="form-label">Fecha de creación</label>
+                    <input type="text" id="fecha" class="form-control" placeholder="Fecha de creación">
+                </div>
+                <div class="col-md-12 d-flex justify-content-center">
+                    <button id="buscar" class="btn btn-primary mt-3">Buscar</button>
+                </div>
+            </form>
         </div>
-
-        {{!-- TICKETS TABLE --}}
-        <table class="table table-striped mt-5 text-center mb-5">
-            <thead>
-                <tr>
-                    <th scope="col">Nombre de usuario</th>
-                    <th scope="col">Tipo</th>
-                    <th scope="col">Auditado</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#each tickets}}
-                <tr>
-                    <td>{{this.nombre_usuario}}</td>
-                    <td>{{this.tipo}}</td>
-                    <td><input type="checkbox" {{#if this.auditado}}checked{{/if}}></td>
-                </tr>
-                {{/each}}
-            </tbody>
-        </table>
-
-        {{!-- PAGINATION --}}
-        <nav aria-label="Page navigation">
-            <ul class="pagination justify-content-center">
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">...</a></li>
-                <li class="page-item"><a class="page-link" href="#">20</a></li>
-            </ul>
-        </nav>
     </div>
 
+    {{!-- TICKETS TABLE --}}
+    <table class="table table-striped mt-5 text-center mb-5">
+        <thead>
+            <tr>
+                <th scope="col">Nombre de usuario</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Auditado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each tickets}}
+            <tr>
+                <td>{{this.nombre_usuario}}</td>
+                <td>{{this.tipo}}</td>
+                <td><input type="checkbox" {{#if this.auditado}}checked{{/if}}></td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
 
-   
+    {{!-- PAGINATION --}}
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">...</a></li>
+            <li class="page-item"><a class="page-link" href="#">20</a></li>
+        </ul>
+    </nav>
+</div>
