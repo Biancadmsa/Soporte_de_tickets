@@ -11,17 +11,13 @@ html, body {
     background-color: #181818;
 }
 
-/* .btn-custom {
-    background-color: #007bff;
-    color: white;
-} */
-
 form{
     max-width: 700px;
     border: 1px solid #111111; 
     padding: 40px; 
     border-radius: 30px;
 }
+
 .text-logo {
     font-size: 1.5rem;
     text-align: center;
@@ -30,7 +26,6 @@ form{
 #tipo, #fecha{
     border: 1px solid #111111; 
 }
- 
 
 .nav-link {
     color: white !important;
@@ -59,23 +54,49 @@ form{
     color: white;
     background-color: #dc3545;
     width: 200px; 
-    text-align: left; 
+    text-align: left;
     white-space: nowrap;
 }
+
+.btn-group .dropdown-item {
+    color: white;
+    width: 100%; 
+} 
 
 .btn-group .dropdown-menu {
     background-color: #343a40; 
     width: 100%;
-}
-
-/* 
-.btn-group .dropdown-item {
-    color: white;
-    width: 100%; 
-} */
-
+} 
 .btn-group .dropdown-item:hover {
-    background-color: #dc3545; /* Bootstrap danger color */
+    background-color: #dc3545; 
     color: white;
 }
 
+.table {
+    margin: auto;
+    width: 80%;
+}
+
+.table th, .table td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.table th {
+    background-color: #343a40;
+    color: white;
+}
+
+.table-bordered th, .table-bordered td {
+    border: 1px solid #dee2e6;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+}

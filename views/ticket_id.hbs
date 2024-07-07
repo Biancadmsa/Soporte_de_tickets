@@ -33,15 +33,37 @@
     </div>
   </div>
 </nav>
-
 <div class="container">
   <div class="text-center mt-5">
     <h2>Detalle del Ticket</h2>
   </div>
-  <div class="ticket-detalle">
-    <p><strong>ID:</strong> {{ticket.id}}</p>
-    <p><strong>Tipo:</strong> {{ticket.tipo}}</p>
-    <p><strong>Descripción:</strong> {{ticket.descripcion}}</p>
-    <p><strong>Fecha de Creación:</strong> {{ticket.fecha_creacion}}</p>
+  <div class="table-responsive">
+    <table class="table table-bordered mt-3">
+      <thead class="table-dark">
+        <tr>
+          <th scope="col">Campo</th>
+          <th scope="col">Detalle</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>ID:</strong></td>
+          <td>{{ticket.id}}</td>
+        </tr>
+        <tr>
+          <td><strong>Tipo:</strong></td>
+          <td>{{ticket.tipo}}</td>
+        </tr>
+        <tr>
+          <td><strong>Descripción:</strong></td>
+          <td>{{ticket.descripcion}}</td>
+        </tr>
+        <tr>
+          <td><strong>Fecha de Creación:</strong></td>
+          <td>{{ticket.fecha_creacion}}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
+

@@ -104,7 +104,6 @@ app.post("/login", async (req, res) => {
 app.get("/success", (req, res) => {
   res.render("success", { cssFile: "success.css", title: "Éxito" });
 });
-
 app.get("/tickets", autenticarToken, async (req, res) => {
   try {
     const resultado = await pool.query(`
@@ -127,6 +126,7 @@ app.get("/tickets", autenticarToken, async (req, res) => {
   }
 });
 
+
 app.get('/ticket/nuevo', autenticarToken, (req, res) => {
   res.render('ticket_nuevo', {
     cssFile: 'ticket_nuevo.css',
@@ -136,15 +136,26 @@ app.get('/ticket/nuevo', autenticarToken, (req, res) => {
 });
 app.post('/ticket/nuevo', autenticarToken, async (req, res) => {
   try {
-    console.log('Datos del formulario:', req.body);
-    const tipoResult = await pool.query("SELECT id FROM tipos WHERE nombre = $1", [req.body.tipo]);
+    const { tipo, descripcion } = req.body;
+
+    // Verificar si el tipo existe, si no, agregarlo
+    let tipoResult = await pool.query("SELECT id FROM tipos WHERE nombre = $1", [tipo]);
     if (tipoResult.rows.length === 0) {
-      return res.status(404).send("Tipo no encontrado");
+      // Insertar nuevo tipo
+      await pool.query("INSERT INTO tipos (nombre) VALUES ($1)", [tipo]);
+      tipoResult = await pool.query("SELECT id FROM tipos WHERE nombre = $1", [tipo]);
     }
     const id_tipo = tipoResult.rows[0].id;
-    const resultado = await pool.query("INSERT INTO tickets (descripcion, id_usuario, id_tipo) VALUES ($1, $2, $3) RETURNING *", [req.body.descripcion, req.usuario.id, id_tipo]);
+
+    // Insertar el nuevo ticket
+    const resultado = await pool.query(
+      "INSERT INTO tickets (descripcion, id_usuario, id_tipo) VALUES ($1, $2, $3) RETURNING *",
+      [descripcion, req.usuario.id, id_tipo]
+    );
     const ticket = resultado.rows[0];
-    res.redirect(`/ticket/${ticket.id}`);
+
+    // Redirigir a la página de tickets
+    res.redirect('/tickets');
   } catch (err) {
     console.error("Error al crear ticket:", err);
     res.status(500).send("Error al crear ticket");
