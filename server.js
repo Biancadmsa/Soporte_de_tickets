@@ -126,22 +126,27 @@ app.get("/success", (req, res) => {
 });
 
 
-
-
 app.get("/tickets", autenticarToken, async (req, res) => {
   try {
-    const resultado = await pool.query("SELECT * FROM tickets");
+    const resultado = await pool.query("SELECT * FROM tickets WHERE id_usuario = $1", [req.usuario.id]);
     const tickets = resultado.rows;
     res.render("tickets", {
       cssFile: "tickets.css",
       title: "Tickets",
       tickets,
+      usuario: req.usuario // Pasa el objeto usuario a la vista
     });
   } catch (err) {
     console.error("Error al obtener tickets:", err);
     res.status(500).send("Error al obtener tickets");
   }
 });
+
+app.get("/", (req, res) => {
+  res.clearCookie("token");
+  res.redirect("/login");
+});
+
 
 
 

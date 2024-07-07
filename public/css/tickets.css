@@ -11,14 +11,26 @@ html, body {
     background-color: #181818;
 }
 
-.btn-custom {
+/* .btn-custom {
     background-color: #007bff;
     color: white;
-}
+} */
 
+form{
+    max-width: 700px;
+    border: 1px solid #111111; 
+    padding: 40px; 
+    border-radius: 30px;
+}
 .text-logo {
     font-size: 1.5rem;
+    text-align: center;
 }
+
+#tipo, #fecha{
+    border: 1px solid #111111; 
+}
+ 
 
 .nav-link {
     color: white !important;
@@ -42,23 +54,28 @@ html, body {
 .content {
     margin-top: 5px;
 }
-/* 
-footer {
-    flex-shrink: 0;
-    background-color: #181818;
-} */
-/* 
-@media (max-width: 768px) {
-    .form-container {
-        padding: 15px;
-    }
 
-    footer .col-2 {
-        width: 50px;
-        margin-bottom: 10px;
-    }
+.btn-group .btn {
+    color: white;
+    background-color: #dc3545;
+    width: 200px; 
+    text-align: left; 
+    white-space: nowrap;
+}
 
-    footer h6 {
-        font-size: 14px;
-    }
+.btn-group .dropdown-menu {
+    background-color: #343a40; 
+    width: 100%;
+}
+
+/* 
+.btn-group .dropdown-item {
+    color: white;
+    width: 100%; 
 } */
+
+.btn-group .dropdown-item:hover {
+    background-color: #dc3545; /* Bootstrap danger color */
+    color: white;
+}
+

@@ -12,11 +12,25 @@ body {
 footer {
     background-color: #181818;
     text-align: center;
-    padding: 20px;
+    padding: 7px 0; 
     position: relative;
     bottom: 0;
     width: 100%;
 }
+
+footer .row {
+    margin-bottom: 3px; 
+}
+
+footer .col-2,
+footer .col-md-1 {
+    margin-bottom: 3px;
+}
+
+footer h6 {
+    margin: 0; 
+}
+
 
 .whatsapp-icon {
     color: #ffffff;
