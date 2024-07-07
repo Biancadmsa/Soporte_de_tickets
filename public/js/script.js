@@ -1,169 +1,133 @@
-$(document).ready(function () {
-  $('[data-toggle="tooltip"]').tooltip();
-});
-
-// login.hbs
-document.addEventListener("DOMContentLoaded", () => {
-  const loginForm = document.getElementById("loginForm");
-
-  loginForm.addEventListener("submit", (e) => {
-    const email = loginForm.email.value.trim();
-    const password = loginForm.password.value.trim();
-
-    if (!email || !password) {
-      e.preventDefault();
-      alert("Debes ingresar todos los campos.");
-    }
-  });
-});
-
-// toast login.hbs
-
-document.addEventListener("DOMContentLoaded", function () {
-  const loginForm = document.getElementById("loginForm");
-  const loginButton = document.querySelector('button[type="submit"]');
-
-  loginButton.addEventListener("click", function (event) {
-    event.preventDefault(); // Prevenir el envío del formulario
-    validateForm(); // Llama a la función de validación
-  });
-
-  function validateForm() {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    if (email === "" || password === "") {
-      showToast();
-    } else {
-      loginForm.submit(); // Envía el formulario si los campos están llenos
-    }
-  }
-
-  function showToast() {
-    const toastLiveExample = document.getElementById("liveToast");
-    const toast = new bootstrap.Toast(toastLiveExample);
-    toast.show();
-  }
-});
-
-
-// toast de registro.hdb 
-
-document.addEventListener('DOMContentLoaded', function() {
-            flatpickr("#fecha", {
-              dateFormat: "Y-m-d",
-              locale: "es"
-          });
-      });
-
-      function showToast() {
-          const toast = new bootstrap.Toast(document.getElementById('liveToast'));
-          toast.show();
-      }
-
-
-
-
-// ojito ver contraseña en login
-function togglePassword() {
-  const password = document.getElementById("password");
-  const togglePassword = document.getElementById("togglePassword");
-  if (password.type === "password") {
-    password.type = "text";
-    togglePassword.classList.remove("fa-eye");
-    togglePassword.classList.add("fa-eye-slash");
-  } else {
-    password.type = "password";
-    togglePassword.classList.remove("fa-eye-slash");
-    togglePassword.classList.add("fa-eye");
-  }
-}
-
-// inicio sesion
-document.addEventListener("DOMContentLoaded", () => {
-  const loginButton = document.getElementById("loginButton");
-  if (loginButton) {
-    loginButton.addEventListener("click", () => {
-      // Lógica adicional si es necesario
-    });
-  }
-});
-
-// ticket.hbs
-document.addEventListener("DOMContentLoaded", function () {
-  var fechaInput = document.getElementById("fecha");
-  fechaInput.value = moment().format("ddd, DD MMM YYYY");
-  document.getElementById("buscar").addEventListener("click", function () {
-    var tipo = document.getElementById("tipo").value;
-    var fecha = document.getElementById("fecha").value;
-    console.log("Buscar por:", { tipo, fecha });
-  });
-});
-
-
-
-// calendario-tickets.hdb
-    document.addEventListener('DOMContentLoaded', function() {
-        flatpickr("#fecha", {
-            dateFormat: "Y-m-d",
-            locale: "es"
-        });
-    });
-
-// registro.hbs
-
 document.addEventListener("DOMContentLoaded", function() {
-  var loginButton = document.getElementById('loginButton');
-  
-  if (loginButton) {
-      loginButton.addEventListener('click', function(event) {
-          if (!validateForm()) {
-              event.preventDefault(); // Prevenir el envío del formulario si la validación falla
-          }
-      });
+  // Iniciar tooltips de Bootstrap
+  if ($('[data-toggle="tooltip"]').length) {
+    $('[data-toggle="tooltip"]').tooltip();
   }
 
-  function validateForm() {
-      var inputUsuario = document.getElementById('inputUsuario');
-      var inputEmail = document.getElementById('inputEmail');
-      var inputPassword = document.getElementById('inputPassword');
+  // Validación del formulario de login
+  const loginForm = document.getElementById("loginForm");
+  if (loginForm) {
+    loginForm.addEventListener("submit", function(e) {
+      const email = loginForm.email.value.trim();
+      const password = loginForm.password.value.trim();
+      if (!email || !password) {
+        e.preventDefault();
+        showToast("Debes ingresar todos los campos.");
+      }
+    });
+
+    const loginButton = document.querySelector('button[type="submit"]');
+    if (loginButton) {
+      loginButton.addEventListener("click", function(event) {
+        event.preventDefault(); // Prevenir el envío del formulario
+        validateLoginForm(); // Llama a la función de validación
+      });
+    }
+
+    function validateLoginForm() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      if (!email || !password) {
+        showToast("Debes ingresar todos los campos.");
+      } else {
+        loginForm.submit(); // Envía el formulario si los campos están llenos
+      }
+    }
+  }
+
+  // Validación del formulario de registro
+  const registroForm = document.getElementById("registroForm");
+  if (registroForm) {
+    const registroButton = document.getElementById('registroButton');
+    if (registroButton) {
+      registroButton.addEventListener('click', function(event) {
+        if (!validateRegistroForm()) {
+          event.preventDefault(); // Prevenir el envío del formulario si la validación falla
+        }
+      });
+    }
+
+    function validateRegistroForm() {
+      const inputUsuario = document.getElementById('inputUsuario');
+      const inputEmail = document.getElementById('inputEmail');
+      const inputPassword = document.getElementById('inputPassword');
 
       if (!inputUsuario || !inputEmail || !inputPassword) {
-          console.error("Uno o más elementos del formulario no se encontraron.");
-          return false;
+        console.error("Uno o más elementos del formulario no se encontraron.");
+        return false;
       }
 
       if (inputUsuario.value.trim() === '' || inputEmail.value.trim() === '' || inputPassword.value.trim() === '') {
-          showToast("Todos los campos son obligatorios.");
-          return false;
+        showToast("Todos los campos son obligatorios.");
+        return false;
       }
 
       return true;
+    }
   }
 
+  // Mostrar toast
   function showToast(message) {
-      var toastElement = document.getElementById('liveToast');
-      var toastBody = toastElement.querySelector('.toast-body');
+    const toastElement = document.getElementById('liveToast');
+    if (toastElement) {
+      const toastBody = toastElement.querySelector('.toast-body');
       toastBody.textContent = message;
-      var toast = new bootstrap.Toast(toastElement);
+      const toast = new bootstrap.Toast(toastElement);
       toast.show();
+    }
   }
-});
-  
- 
 
-// contador al registrar usuario
-document.addEventListener("DOMContentLoaded", function () {
-  var fechaRegistro = moment().format('LL'); // Formato de fecha de registro
-  document.getElementById('fechaRegistro').innerText = `Registrado el: ${fechaRegistro}`;
-  
-  var contadorElement = document.getElementById('contador');
-  var tiempo = 6;
-  var interval = setInterval(function() {
+  // Funcionalidad de ver contraseña en login
+  const togglePassword = document.getElementById("togglePassword");
+  if (togglePassword) {
+    togglePassword.addEventListener("click", function() {
+      const password = document.getElementById("password");
+      if (password.type === "password") {
+        password.type = "text";
+        togglePassword.classList.remove("fa-eye");
+        togglePassword.classList.add("fa-eye-slash");
+      } else {
+        password.type = "password";
+        togglePassword.classList.remove("fa-eye-slash");
+        togglePassword.classList.add("fa-eye");
+      }
+    });
+  }
+
+  // Inicializar flatpickr
+  const fechaInput = document.getElementById("fecha");
+  if (fechaInput) {
+    flatpickr("#fecha", {
+      dateFormat: "Y-m-d",
+      locale: "es"
+    });
+  }
+
+  // Configuración específica de ticket.hbs
+  const buscarButton = document.getElementById("buscar");
+  if (buscarButton) {
+    buscarButton.addEventListener("click", function() {
+      const tipo = document.getElementById("tipo").value;
+      const fecha = document.getElementById("fecha").value;
+      console.log("Buscar por:", { tipo, fecha });
+    });
+  }
+
+  // Redirección de página de éxito
+  const fechaRegistroElement = document.getElementById('fechaRegistro');
+  const contadorElement = document.getElementById('contador');
+  if (fechaRegistroElement && contadorElement) {
+    const fechaRegistro = moment().format('LL'); // Formato de fecha de registro
+    fechaRegistroElement.innerText = `Registrado el: ${fechaRegistro}`;
+
+    let tiempo = 6;
+    const interval = setInterval(function() {
       tiempo--;
       contadorElement.innerText = tiempo;
       if (tiempo === 0) {
-          clearInterval(interval);
-          window.location.href = "/login";
+        clearInterval(interval);
+        window.location.href = "/login";
       }
-  }, 1000);
+    }, 1000);
+  }
 });

@@ -2,8 +2,6 @@ body {
     margin: 0;
     border: 0;
     padding: 0;
-    background-color: #ffffff;
-    font-family: 'Roboto', sans-serif !important;
   }
   
 
@@ -33,6 +31,12 @@ body {
     margin-right: 10px;
 }
 
+
+h1{
+    text-align: center;
+    padding-top: 18px;
+    color: rgb(56, 56, 66) !important;
+}
 
 
 /* card */

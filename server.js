@@ -88,6 +88,10 @@ app.get("/ticket/:id", autenticarToken, (req, res) => {
   res.render("ticket_id", { cssFile: "ticket_id.css", title: "Detalle del Ticket", ticket: {} });
 });
 
+app.get("/success", (req, res) => {
+  res.render("success", { cssFile: "success.css", title: "Registro Exitoso" });
+});
+
 app.post("/registro", async (req, res) => {
   const { nombre, email, password, tipo_usuario } = req.body;
 
@@ -105,11 +109,11 @@ app.post("/registro", async (req, res) => {
     const usuario = resultado.rows[0];
     console.log("Usuario registrado:", usuario);
 
-    // Generar token JWT
+ 
     const token = jwt.sign({ usuario }, SECRET, { expiresIn: "1h" });
     res.cookie("token", token, { httpOnly: true });
 
-    // Redirigir a la página de éxito
+    // Redirigir a la página de bienvenida después del registro exitoso
     res.redirect("/success");
   } catch (err) {
     console.error("Error al registrar el usuario:", err);
@@ -117,9 +121,14 @@ app.post("/registro", async (req, res) => {
   }
 });
 
+
+
 app.get("/success", (req, res) => {
   res.render("success", { cssFile: "success.css", title: "Éxito" });
 });
+
+
+
 
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
@@ -135,18 +144,14 @@ app.post("/login", async (req, res) => {
       console.log("Usuario no encontrado"); // Log de depuración
       return res.status(400).send("Usuario no encontrado");
     }
-
     console.log("Usuario encontrado:", usuario); // Log de depuración
-
     if (password !== usuario.password) {
       console.log("Contraseña incorrecta"); // Log de depuración
       return res.status(400).send("Contraseña incorrecta");
     }
-
     // Generar token JWT
     const token = jwt.sign({ usuario }, SECRET, { expiresIn: "1h" });
     res.cookie("token", token, { httpOnly: true });
-
     // Redirigir a la ruta /tickets después del inicio de sesión exitoso
     res.redirect("/tickets");
   } catch (err) {

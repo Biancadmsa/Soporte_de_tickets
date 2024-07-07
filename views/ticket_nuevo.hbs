@@ -1,1 +1,27 @@
 {{!< main}}
+
+
+
+
+
+
+
+
+<div class="container">
+    <h2>Crear nuevo Ticket</h2>
+    <form action="/ticket/nuevo" method="post">
+        <div class="mb-3">
+            <label for="tipo" class="form-label">Tipo</label>
+            <select class="form-select" id="tipo" name="tipo" required>
+                <option value="Urgente">Urgente</option>
+                <option value="Importante">Importante</option>
+                <option value="Neutro">Neutro</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="descripcion" class="form-label">Descripción</label>
+            <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+    </form>
+</div>

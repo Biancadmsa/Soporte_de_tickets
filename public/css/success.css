@@ -1,33 +1,88 @@
 body {
+    margin: 0;
+    padding: 0;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: flex-start;
     align-items: center;
     height: 100vh;
-    margin: 0;
+    background-color: #f8f9fa; /* Fondo ligero para contraste */
 }
+
 .background-image {
     background-image: url('/imgs/bienvenido.jpg'); /* Asegúrate de que la ruta sea correcta */
     background-size: cover;
     background-position: center;
-    width: 70%;
-    height: 80%;
-    position: absolute;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     z-index: -1;
 }
+
 .card {
     background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco con opacidad */
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border: 2px solid red;
-    opacity: 0.8;
+    padding: 20px;
+    max-width: 90%; /* Ancho máximo para la tarjeta en tamaños de pantalla pequeños */
+    width: 100%;
+    margin: 10% auto; /* Ajusta este valor para centrar la tarjeta más cerca de la cara */
+    transform: translate(-20rem, -10%); /* Mover la tarjeta más a la izquierda y un poco más arriba */
 }
+
+.card-header {
+    background-color: rgba(0, 0, 0, 0.05); /* Fondo ligeramente oscuro para contraste */
+}
+
+.bienvenido-text {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
 #fechaRegistro {
     border: 1px solid black;
     padding: 5px;
     display: inline-block;
 }
+
 #contador {
     font-size: 48px;
     color: red;
     margin-top: 20px;
+}
+
+
+/* Media queries para hacer ajustes en diferentes tamaños de pantalla */
+@media (max-width: 768px) {
+    .bienvenido-text {
+        font-size: 1.5rem;
+    }
+
+    .card {
+        max-width: 95%;
+        margin: 15% auto;
+        transform: translate(-2rem, -5%); /* Ajuste para pantallas más pequeñas */
+    }
+
+    #contador {
+        font-size: 36px;
+    }
+}
+
+@media (max-width: 480px) {
+    .bienvenido-text {
+        font-size: 1.2rem;
+    }
+
+    .card {
+        max-width: 100%;
+        margin: 20% auto;
+        transform: translate(-1rem, -2%); /* Ajuste para pantallas aún más pequeñas */
+    }
+
+    #contador {
+        font-size: 24px;
+    }
 }

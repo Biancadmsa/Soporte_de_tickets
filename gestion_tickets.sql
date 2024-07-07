@@ -48,7 +48,7 @@ SELECT * FROM usuarios;
 -- Insertar datos semilla
 INSERT INTO usuarios (nombre, email, password, tipo_usuario) VALUES
   ('Rodrigo', 'administrador@mail.com', 'Abc123#', 'administrador'), 
-  ('Bianca', 'estudiante@mail.com', 'Abc123#', 'estudiante');
+  ('Bianca', 'estudiante@mail.com', 'Abc123#', 'cliente');
 
 
 
