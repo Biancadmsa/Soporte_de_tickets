@@ -99,7 +99,6 @@ app.post("/registro", async (req, res) => {
 
 // 3. Inicio de Sesión (Acceso Público)
 
-
 app.get("/login", (req, res) => {
   res.render("login", { cssFile: "login.css", title: "Iniciar Sesión" });
 });
@@ -122,41 +121,12 @@ app.post("/login", async (req, res) => {
 });
 
 
-
-app.get("/tickets", autenticarToken, verificarAdmin, (req, res) => {
-  res.render("tickets", {
-    cssFile: "tickets.css",
-    title: "Tickets",
-    tickets: [],
-  });
-});
-
-app.get("/ticket/nuevo", autenticarToken, (req, res) => {
-  res.render("ticket_nuevo", {
-    cssFile: "ticket_nuevo.css",
-    title: "Nuevo Ticket",
-  });
-});
-
-app.get("/ticket/:id", autenticarToken, (req, res) => {
-  const ticketId = req.params.id;
-  // obtener los detalles del ticket
-  res.render("ticket_id", {
-    cssFile: "ticket_id.css",
-    title: "Detalle del Ticket",
-    ticket: {},
-  });
-});
-
-
-
-
-
-
-
 app.get("/success", (req, res) => {
   res.render("success", { cssFile: "success.css", title: "Éxito" });
 });
+
+
+
 
 app.get("/tickets", autenticarToken, async (req, res) => {
   try {
@@ -172,6 +142,13 @@ app.get("/tickets", autenticarToken, async (req, res) => {
     res.status(500).send("Error al obtener tickets");
   }
 });
+
+
+
+
+
+
+
 
 // Iniciar el servidor
 app.listen(PORT, () => {
