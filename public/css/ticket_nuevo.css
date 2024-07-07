@@ -1,0 +1,72 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Roboto', sans-serif !important;
+}
+
+.navbar-custom {
+    background-color: #181818;
+}
+
+form {
+    max-width: 700px;
+    border: 1px solid #111111; 
+    padding: 40px; 
+    border-radius: 30px;
+}
+
+.text-logo {
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.nav-link {
+    color: white !important;
+}
+
+.navbar-dark .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><path stroke='rgba(255, 255, 255, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>");
+}
+
+.btn-outline-primary {
+    margin-right: 10px;
+}
+
+.container {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.content {
+    margin-top: 5px;
+}
+
+.btn-group .btn {
+    color: white;
+    background-color: #dc3545;
+    width: 200px; 
+    text-align: left; 
+    white-space: nowrap;
+}
+
+.btn-group .dropdown-menu {
+    background-color: #343a40; 
+    width: 100%;
+} 
+
+.btn-group .dropdown-item {
+    color: white;
+    width: 100%; 
+} 
+
+.btn-group .dropdown-item:hover {
+    background-color: #dc3545;
+    color: white;
+}

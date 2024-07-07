@@ -109,7 +109,7 @@ app.post("/login", async (req, res) => {
     const resultado = await pool.query("SELECT * FROM usuarios WHERE email = $1", [email]);
     const usuario = resultado.rows[0];
     if (!usuario || password !== usuario.password) {
-      return res.status(400).send("Usuario o contraseña incorrectos");
+      return res.status(400).send(" Tu Usuario o contraseña son incorrectos o no estas registrado!");
     }
     const token = jwt.sign({ usuario }, SECRET, { expiresIn: "1h" }); // Generar token JWT
     res.cookie("token", token, { httpOnly: true });
@@ -145,6 +145,11 @@ app.get("/tickets", autenticarToken, async (req, res) => {
 app.get("/", (req, res) => {
   res.clearCookie("token");
   res.redirect("/login");
+});
+
+
+app.get("/ticket/nuevo", autenticarToken, (req, res) => {
+  res.render("ticket_nuevo", { cssFile: "ticket_nuevo.css", title: "Crear Ticket Nuevo" });
 });
 
 
