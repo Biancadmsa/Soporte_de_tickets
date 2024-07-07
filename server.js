@@ -63,9 +63,9 @@ app.get('/login', (req, res) => {
     res.render('login');
 });
 
-app.get('/registro', (req, res) => {
-    res.render('registro');
-});
+// app.get('/registro', (req, res) => {
+//     res.render('registro');
+// });
 
 app.get('/tickets', autenticarToken, verificarAdmin, (req, res) => {
     res.render('tickets', { tickets: [] });
@@ -81,20 +81,28 @@ app.get('/ticket/:id', autenticarToken, (req, res) => {
     res.render('ticket_id', { ticket: {} });
 });
 
-// Rutas para registro y login de usuarios
 app.post('/registro', async (req, res) => {
     const { nombre, email, password, tipo_usuario } = req.body;
+
+    if (!nombre || !email || !password) {
+        return res.status(400).json({ error: 'Todos los campos son obligatorios' });
+    }
+
     try {
         const resultado = await pool.query(
             'INSERT INTO usuarios (nombre, email, password, tipo_usuario) VALUES ($1, $2, $3, $4) RETURNING *',
-            [nombre, email, password, tipo_usuario]
+            [nombre, email, password, tipo_usuario || 'usuario'] // Asigna un valor predeterminado a tipo_usuario
         );
         console.log("Usuario registrado:", resultado.rows[0]); // Log para depuración
-        res.json(resultado.rows[0]);
+        res.redirect('/success'); // Redirige al usuario a /success
     } catch (err) {
         console.error("Error al registrar el usuario:", err); // Log para depuración
         res.status(500).send("Error al registrar el usuario");
     }
+});
+
+app.get('/success', (req, res) => {
+    res.send('Registro exitoso');
 });
 
 app.post('/login', async (req, res) => {

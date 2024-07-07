@@ -48,6 +48,8 @@ h2 {
 
 footer {
     flex-shrink: 0;
+    background-color: #181818;
+
 }
 
 .form-container {

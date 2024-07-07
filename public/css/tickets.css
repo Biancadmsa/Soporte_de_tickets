@@ -1,0 +1,64 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Roboto', sans-serif !important;
+}
+
+.navbar-custom {
+    background-color: #181818;
+}
+
+.btn-custom {
+    background-color: #007bff;
+    color: white;
+}
+
+.text-logo {
+    font-size: 1.5rem;
+}
+
+.nav-link {
+    color: white !important;
+}
+
+.navbar-dark .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><path stroke='rgba(255, 255, 255, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>");
+}
+
+.btn-outline-primary {
+    margin-right: 10px;
+}
+
+.container {
+    flex: 1 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.content {
+    margin-top: 5px;
+}
+
+footer {
+    flex-shrink: 0;
+    background-color: #181818;
+}
+
+@media (max-width: 768px) {
+    .form-container {
+        padding: 15px;
+    }
+
+    footer .col-2 {
+        width: 50px;
+        margin-bottom: 10px;
+    }
+
+    footer h6 {
+        font-size: 14px;
+    }
+}

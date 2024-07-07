@@ -1,0 +1,20 @@
+body {
+    background-image: url('../imgs/bienvenido.jpg'); /* Asegúrate de que la ruta sea correcta */
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.card {
+    background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco con opacidad */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+#fechaRegistro {
+    border: 1px solid black;
+    padding: 5px;
+    display: inline-block;
+}

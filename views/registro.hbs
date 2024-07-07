@@ -22,7 +22,8 @@
 <body>
 
 
-    {{!-- NAVBAR --}}
+
+    <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
         <div class="container-fluid">
             <p class="navbar-brand mb-0 text-logo">Sopote de Tickets</p>
@@ -39,40 +40,60 @@
                 </div>
                 <div class="offcanvas-body" id="navbarNav">
                     <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                       <li class="nav-item">
+                        <li class="nav-item">
                             <a href="/" class="btn btn-outline-primary mt-2" role="button">Volver a Home</a>
                         </li>
                     </ul>
                 </div>
             </div>
         </div>
-    </nav>
-
+    </nav><div class="content flex-grow-1 d-flex flex-column justify-content-start align-items-center">
     <div class="container">
+        <!-- Formulario de Registro -->
         <div class="form-container">
-            <form>
+            <form action="/registro" method="POST">
                 <h2>Registro</h2>
                 <div class="mb-3">
                     <label for="inputUsuario" class="form-label fw-bold">Usuario</label>
-                    <input type="text" class="form-control custom-border" id="inputUsuario" placeholder="Ingresa tu nombre de usuario">
+                    <input type="text" class="form-control custom-border" id="inputUsuario" name="nombre"
+                        placeholder="Ingresa tu nombre de usuario">
                 </div>
                 <div class="mb-3">
                     <label for="inputEmail" class="form-label fw-bold">Email address</label>
-                    <input type="email" class="form-control custom-border" id="inputEmail" aria-describedby="emailHelp" placeholder="Ingresa tu email">
+                    <input type="email" class="form-control custom-border" id="inputEmail" name="email"
+                        aria-describedby="emailHelp" placeholder="Ingresa tu email">
                 </div>
                 <div class="mb-3">
                     <label for="inputPassword" class="form-label fw-bold">Password</label>
-                    <input type="password" class="form-control custom-border" id="inputPassword" placeholder="Ingresa tu contraseña">
+                    <input type="password" class="form-control custom-border" id="inputPassword" name="password"
+                        placeholder="Ingresa tu contraseña">
                 </div>
-                <div class="d-flex justify-content-center mt-3">
-                    <a href="/login" role="button"  type="submit" class="btn btn-primary">Registrar</a>
-                   
+                <div class="d-flex justify-content-center">
+                    <button id="loginButton" type="submit" class="btn btn-primary">Registrate</button>
+                </div>
+
+                <!-- Toast -->
+                <div class="toast-container">
+                    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header">
+                            <strong class="me-auto fw-bold text-danger">Atención, hay un error!</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body">
+                            Ingresa todos los campos o regístrate.
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>
     </div>
+</div>
 
-    <footer class="text-center py-3 text-light bg-dark" id="contacto">
+
+
+
+    <footer class="text-center mt-5 py-3 bg-dark text-light">
         <div class="container-fluid">
             <div class="row justify-content-center">
                 <div class="col-2 col-md-1 px-0">
@@ -121,7 +142,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
         integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
         crossorigin="anonymous"></script>
-           <script src="/js/script.js"></script>
+    <script src="/js/script.js"></script>
 </body>
 
 </html>

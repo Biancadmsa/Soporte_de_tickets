@@ -45,6 +45,24 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
+
+// toast de registro.hdb 
+
+document.addEventListener('DOMContentLoaded', function() {
+            flatpickr("#fecha", {
+              dateFormat: "Y-m-d",
+              locale: "es"
+          });
+      });
+
+      function showToast() {
+          const toast = new bootstrap.Toast(document.getElementById('liveToast'));
+          toast.show();
+      }
+
+
+
+
 // ojito ver contraseña en login
 function togglePassword() {
   const password = document.getElementById("password");
@@ -80,3 +98,14 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log("Buscar por:", { tipo, fecha });
   });
 });
+
+
+
+// calendario-tickets.hdb
+    document.addEventListener('DOMContentLoaded', function() {
+        flatpickr("#fecha", {
+            dateFormat: "Y-m-d",
+            locale: "es"
+        });
+    });
+
