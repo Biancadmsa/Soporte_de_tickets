@@ -5,7 +5,6 @@ const fileUpload = require("express-fileupload");
 const bodyParser = require("body-parser");
 const path = require("path");
 const cookieParser = require("cookie-parser");
-const fs = require("fs");
 const { v4: uuidv4 } = require("uuid");
 const pool = require("./db/db");
 const helpers = require("handlebars-helpers")();
@@ -25,7 +24,8 @@ app.engine(
   "hbs",
   exphbs.engine({
     extname: "hbs",
-    defaultLayout: false,
+    defaultLayout: "main",
+    layoutsDir: path.join(__dirname, "views", "layouts"),
     helpers,
   })
 );
@@ -63,68 +63,62 @@ const verificarAdmin = (req, res, next) => {
 
 // Rutas para mostrar las páginas
 app.get("/", (req, res) => {
-  res.render("home");
+  res.render("home", { cssFile: "home.css", title: "Sistema de Tickets para Soporte Técnico" });
 });
 
 app.get("/login", (req, res) => {
-  res.render("login");
+  res.render("login", { cssFile: "login.css", title: "Iniciar Sesión" });
 });
 
 app.get('/registro', (req, res) => {
-    res.render('registro');
+    res.render('registro', { cssFile: "registro.css", title: "Registro de Usuario" });
 });
 
 app.get("/tickets", autenticarToken, verificarAdmin, (req, res) => {
-  res.render("tickets", { tickets: [] });
+  res.render("tickets", { cssFile: "tickets.css", title: "Tickets", tickets: [] });
 });
 
 app.get("/ticket/nuevo", autenticarToken, (req, res) => {
-  res.render("ticket_nuevo");
+  res.render("ticket_nuevo", { cssFile: "ticket_nuevo.css", title: "Nuevo Ticket" });
 });
 
 app.get("/ticket/:id", autenticarToken, (req, res) => {
   const ticketId = req.params.id;
   // obtener los detalles del ticket
-  res.render("ticket_id", { ticket: {} });
+  res.render("ticket_id", { cssFile: "ticket_id.css", title: "Detalle del Ticket", ticket: {} });
 });
+
 app.post("/registro", async (req, res) => {
-    const { nombre, email, password, tipo_usuario } = req.body;
-  
-    if (!nombre || !email || !password) {
-      return res.status(400).json({ error: "Todos los campos son obligatorios" });
-    }
-  
-    try {
-      const resultado = await pool.query(
-        "INSERT INTO usuarios (nombre, email, password, tipo_usuario) VALUES ($1, $2, $3, $4) RETURNING *",
-        [nombre, email, password, tipo_usuario || "usuario"]
-      );
-      const usuario = resultado.rows[0];
-      console.log("Usuario registrado:", usuario);
-  
-      // Generar token JWT
-      const token = jwt.sign({ usuario }, SECRET, { expiresIn: "1h" });
-      res.cookie("token", token, { httpOnly: true });
-  
-      // Redirigir a la página de éxito
-      res.redirect("/success");
-    } catch (err) {
-      console.error("Error al registrar el usuario:", err);
-      res.status(500).send("Error al registrar el usuario");
-    }
-  });
-  
-  app.get("/success", (req, res) => {
-    res.render("success");
-  });
-  
-  
-  app.get("/success", (req, res) => {
-    res.render("success");
-  });
-  
+  const { nombre, email, password, tipo_usuario } = req.body;
+
+  if (!nombre || !email || !password) {
+    return res.status(400).json({ error: "Todos los campos son obligatorios" });
+  }
+
+  const tipoUsuarioFinal = tipo_usuario || "cliente";
+
+  try {
+    const resultado = await pool.query(
+      "INSERT INTO usuarios (nombre, email, password, tipo_usuario) VALUES ($1, $2, $3, $4) RETURNING *",
+      [nombre, email, password, tipoUsuarioFinal]
+    );
+    const usuario = resultado.rows[0];
+    console.log("Usuario registrado:", usuario);
+
+    // Generar token JWT
+    const token = jwt.sign({ usuario }, SECRET, { expiresIn: "1h" });
+    res.cookie("token", token, { httpOnly: true });
+
+    // Redirigir a la página de éxito
+    res.redirect("/success");
+  } catch (err) {
+    console.error("Error al registrar el usuario:", err);
+    res.status(500).send("Error al registrar el usuario");
+  }
+});
+
 app.get("/success", (req, res) => {
-  res.send("Registro exitoso");
+  res.render("success", { cssFile: "success.css", title: "Éxito" });
 });
 
 app.post("/login", async (req, res) => {
@@ -165,7 +159,7 @@ app.get("/tickets", autenticarToken, async (req, res) => {
   try {
     const resultado = await pool.query("SELECT * FROM tickets");
     const tickets = resultado.rows;
-    res.render("tickets", { tickets });
+    res.render("tickets", { cssFile: "tickets.css", title: "Tickets", tickets });
   } catch (err) {
     console.error("Error al obtener tickets:", err);
     res.status(500).send("Error al obtener tickets");

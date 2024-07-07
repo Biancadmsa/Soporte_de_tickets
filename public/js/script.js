@@ -151,3 +151,19 @@ document.addEventListener("DOMContentLoaded", function() {
   
  
 
+// contador al registrar usuario
+document.addEventListener("DOMContentLoaded", function () {
+  var fechaRegistro = moment().format('LL'); // Formato de fecha de registro
+  document.getElementById('fechaRegistro').innerText = `Registrado el: ${fechaRegistro}`;
+  
+  var contadorElement = document.getElementById('contador');
+  var tiempo = 6;
+  var interval = setInterval(function() {
+      tiempo--;
+      contadorElement.innerText = tiempo;
+      if (tiempo === 0) {
+          clearInterval(interval);
+          window.location.href = "/login";
+      }
+  }, 1000);
+});

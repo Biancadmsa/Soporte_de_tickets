@@ -1,0 +1,58 @@
+/* main.css */
+
+body {
+    margin: 0;
+    border: 0;
+    padding: 0;
+    background-color: #ffffff;
+    font-family: 'Roboto', sans-serif !important;
+}
+
+/* footer */
+footer {
+    background-color: #181818;
+    text-align: center;
+    padding: 20px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+.whatsapp-icon {
+    color: #ffffff;
+}
+  
+.github-icon {
+    color: #ffffff;
+}
+  
+.linkedin-icon {
+    color: rgb(255, 255, 255);
+}
+  
+a {
+    text-decoration: none;
+}
+  
+a:hover,
+a:focus {
+    text-decoration: none;
+}
+
+
+
+
+@media (max-width: 768px) {
+    .form-container {
+        padding: 15px;
+    }
+
+    footer .col-2 {
+        width: 50px;
+        margin-bottom: 10px;
+    }
+
+    footer h6 {
+        font-size: 14px;
+    }
+}

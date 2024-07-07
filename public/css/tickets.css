@@ -42,12 +42,12 @@ html, body {
 .content {
     margin-top: 5px;
 }
-
+/* 
 footer {
     flex-shrink: 0;
     background-color: #181818;
-}
-
+} */
+/* 
 @media (max-width: 768px) {
     .form-container {
         padding: 15px;
@@ -61,4 +61,4 @@ footer {
     footer h6 {
         font-size: 14px;
     }
-}
+} */

@@ -70,20 +70,3 @@ footer {
 }
 
 
-
-
-
-@media (max-width: 768px) {
-    .form-container {
-        padding: 15px;
-    }
-
-    footer .col-2 {
-        width: 50px;
-        margin-bottom: 10px;
-    }
-
-    footer h6 {
-        font-size: 14px;
-    }
-}

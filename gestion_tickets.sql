@@ -52,4 +52,6 @@ INSERT INTO usuarios (nombre, email, password, tipo_usuario) VALUES
 
 
 
+DELETE FROM usuarios WHERE id > 2;
 
+UPDATE usuarios SET tipo_usuario = 'cliente' WHERE id = 2;
