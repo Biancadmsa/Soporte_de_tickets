@@ -53,24 +53,16 @@ INSERT INTO usuarios (nombre, email, password, tipo_usuario) VALUES
   ('Rodrigo', 'administrador@mail.com', 'Abc123#', 'administrador'), 
   ('Bianca', 'estudiante@mail.com', 'Abc123#', 'cliente');
 
-
--- Para tipos de tickets
+--  Insertar valores para tipos de tickets
 INSERT INTO tipos (nombre) VALUES ('Urgente'), ('Importante'), ('Neutro');
 
--- SE AGREGA COLUMNA PARA LOS AUDITADOS
-ALTER TABLE tickets ADD COLUMN auditado BOOLEAN DEFAULT false;
-
-DELETE FROM usuarios WHERE id > 2;
-
-UPDATE usuarios SET tipo_usuario = 'cliente' WHERE id = 2;
 
 
 
-SELECT * FROM tipos;
 
 
 psql -U tu_usuario -d tu_base_de_datos
 
 
 
-ALTER TABLE tickets ADD COLUMN auditado BOOLEAN DEFAULT false;
+

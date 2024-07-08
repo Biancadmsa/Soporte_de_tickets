@@ -15,15 +15,20 @@
       <div class="offcanvas-body" id="navbarNav">
         <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
           <li class="nav-item">
-            <a class="nav-link" href="/tickets">Regresar</a>
+            <a class="nav-link" href="/login">Regresar</a>
           </li>
+          {{#unless esAdministrador}}
+          <li class="nav-item">
+            <a class="nav-link" href="/tickets">Mis Tickets</a>
+          </li>
+          {{/unless}}
         </ul>
         <div class="btn-group">
           <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
             {{usuario.email}}
           </button>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/login">Cerrar Sesión</a></li>
+            <li><a class="dropdown-item text-white" href="/login">Cerrar Sesión</a></li>
           </ul>
         </div>
       </div>
@@ -31,7 +36,8 @@
   </div>
 </nav>
 
-<div class="container mt-5">
+
+<div class="container mt-3">
   <h2 class="text-center">Detalle del Ticket</h2>
   <div class="ticket-detalle mb-2">
     <table class="table table-bordered wide-table">
@@ -77,23 +83,27 @@
 
   {{#if esAdministrador}}
   <div class="mt-1 row justify-content-center">
-    <form id="comentario-form" class="col-12 col-md-10 col-lg-8 col-xl-7" action="/ticket/{{ticket.id}}/comentario" method="post">
+    <form id="comentario-form" class="col-12 col-md-10 col-lg-8 col-xl-7" action="/ticket/{{ticket.id}}/comentario"
+      method="post">
       <div class="mb-3 form-floating">
-        <textarea class="form-control" placeholder="Leave a comment here" id="mensaje" name="mensaje" style="height: 100px" required></textarea>
-        <label for="mensaje"><strong>Comentario</strong></label>
+        <textarea class="form-control" placeholder="Deja un comentario aquí" id="mensaje" name="mensaje"
+          style="height: 100px" required></textarea>
+        <label for="mensaje">Escribe un Comentario</label>
       </div>
       <div class="form-check mb-3">
-        <input class="form-check-input custom-checkbox" type="checkbox" value="true" id="auditado" name="auditado" {{#if ticket.auditado}}checked{{/if}}>
+        <input class="form-check-input custom-checkbox" type="checkbox" value="true" id="auditado" name="auditado"
+          {{#if ticket.auditado}}checked{{/if}}>
         <label class="form-check-label fw-bold text-danger" for="auditado">
           Marcar como auditado
         </label>
       </div>
-      <button type="submit" class="btn btn-primary">Agregar Comentario</button>
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary">Agregar Comentario</button>
+      </div>
     </form>
   </div>
   {{/if}}
 </div>
-
 <nav aria-label="Page navigation">
   <ul class="pagination justify-content-center">
     <li class="page-item"><a class="page-link" href="#">1</a></li>
@@ -103,4 +113,3 @@
     <li class="page-item"><a class="page-link" href="#">20</a></li>
   </ul>
 </nav>
-

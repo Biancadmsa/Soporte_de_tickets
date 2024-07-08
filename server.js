@@ -98,6 +98,7 @@ app.post("/api/tickets", autenticarToken, async (req, res) => {
   }
 });
 
+
 app.get("/api/tickets", autenticarToken, async (req, res) => {
   try {
     let query = `
@@ -149,20 +150,36 @@ app.get("/api/tickets/:id", autenticarToken, async (req, res) => {
     res.status(500).send("Error al obtener ticket");
   }
 });
-app.post("/api/tickets/:id/comentarios", autenticarToken, async (req, res) => {
-  const ticketId = req.params.id;
-  const { mensaje } = req.body;
+
+app.post('/ticket/:id/comentario', autenticarToken, async (req, res) => {
+  const ticketId = parseInt(req.params.id, 10);
+  if (isNaN(ticketId)) {
+    return res.status(400).send("ID del ticket no válido");
+  }
+  const { mensaje, auditado } = req.body;
+
   try {
     await pool.query(
-      "INSERT INTO comentarios (id_ticket, id_usuario, mensaje) VALUES ($1, $2, $3)",
+      "INSERT INTO comentarios (id_ticket, id_usuario, mensaje, fecha_creacion) VALUES ($1, $2, $3, CURRENT_TIMESTAMP)",
       [ticketId, req.usuario.id, mensaje]
     );
-    res.status(201).send("Comentario agregado");
+
+    if (req.usuario.tipo_usuario === 'administrador' && auditado === 'true') {
+      await pool.query(
+        "UPDATE tickets SET auditado = $1 WHERE id = $2",
+        [true, ticketId]
+      );
+    }
+
+    // Redirigir al cliente a la página del ticket
+    res.redirect(`/ticket/${ticketId}`);
   } catch (err) {
     console.error("Error al agregar comentario:", err);
-    res.status(500).send("Error al agregar comentario");
+    res.status(500).json({ success: false, error: "Error al agregar comentario" });
   }
 });
+
+
 
 
 
@@ -315,9 +332,12 @@ app.post("/ticket/nuevo", autenticarToken, async (req, res) => {
   }
 });
 
-
 app.get("/ticket/:id", autenticarToken, async (req, res) => {
-  const ticketId = req.params.id;
+  const ticketId = parseInt(req.params.id, 10);
+  if (isNaN(ticketId)) {
+    return res.status(400).send("ID del ticket no válido");
+  }
+
   try {
     const ticketResult = await pool.query(
       "SELECT tickets.*, usuarios.nombre AS nombre_usuario, tipos.nombre AS tipo FROM tickets JOIN usuarios ON tickets.id_usuario = usuarios.id JOIN tipos ON tickets.id_tipo = tipos.id WHERE tickets.id = $1",
@@ -350,6 +370,7 @@ app.get("/ticket/:id", autenticarToken, async (req, res) => {
 });
 
 
+
 app.post('/ticket/:id/comentario', autenticarToken, async (req, res) => {
   const ticketId = req.params.id;
   const { mensaje, auditado } = req.body;
@@ -373,6 +394,7 @@ app.post('/ticket/:id/comentario', autenticarToken, async (req, res) => {
     res.status(500).json({ success: false, error: "Error al agregar comentario" });
   }
 });
+
 
 
 

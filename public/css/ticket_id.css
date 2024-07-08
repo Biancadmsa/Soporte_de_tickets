@@ -13,12 +13,14 @@ body {
 }
 
 form {
-    max-width: 70%; /* Ajuste de ancho */
+    max-width: 70%;
+    /* Ajuste de ancho */
     border: 1px solid #292828;
     padding: 20px;
     border-radius: 30px;
     width: 100%;
-    margin: 20px auto; /* Centrado horizontal */
+    margin: 20px auto;
+    /* Centrado horizontal */
 }
 
 .text-logo {
@@ -44,14 +46,6 @@ form {
     margin-right: 10px;
 }
 
-
-/* 
-.content {
-    width: 100%;
-    max-width: 1200px;
-    margin: auto;
-    padding: 0 15px;
-} */
 
 .btn-group .btn {
     color: white;
@@ -81,57 +75,24 @@ form {
     text-align: center;
     vertical-align: middle;
 }
-/* 
-.table th {
-    background-color: #343a40;
-    color: white;
-} */
-/* 
-.table-bordered th,
-.table-bordered td {
-    border: 1px solid #dee2e6;
-}
 
-.btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
-}
 
 .btn-primary:hover {
     background-color: #0056b3;
     border-color: #004085;
-} */
-/* 
-h2 {
-    padding-top: 15px;
-    text-align: center;
-    width: 100%;
-    color: #dc3545;
-} */
-/* 
+}
+
+
 .card {
     border: 1px solid #ddd;
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
-    width: 70%;
+    width: 80%;
     margin-left: auto;
     margin-right: auto;
-} */
-/* 
-.card-title {
-    font-size: 1.25rem;
-    font-weight: bold;
-} */
-/* 
-.card-text {
-    font-size: 1rem;
-    color: #333;
 }
 
-.card-text small {
-    color: #888;
-}
 
 .custom-checkbox {
     border: 2px solid red;
@@ -145,4 +106,4 @@ h2 {
 .form-check-label {
     color: red;
     font-weight: bold;
-} */
+}

@@ -14,12 +14,16 @@ html, body {
 form, #tipo, #descripcion {
  
     border: 1px solid #727171; 
-    padding: 40px; 
+    padding: 10px; 
     border-radius: 1px;
     margin-bottom: 20px;
+    width: 100%;
+    height: auto;
 }
+
+
 #form-tickets{
-    max-width: 70%;
+    max-width: 60%;
 
 }
 
@@ -43,9 +47,11 @@ form, #tipo, #descripcion {
 }
 
 .container {
+    flex: 1 0 auto;
+    display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: left;
+    align-items: center;
 
 }
 
@@ -83,4 +89,15 @@ form, #tipo, #descripcion {
     margin: 0 !important;
     border-radius: 1px !important;
    
+}
+
+form{
+background: #ebe6e6;
+}
+
+
+footer {
+    flex-shrink: 0 !important;
+    background-color: #181818;
+
 }
