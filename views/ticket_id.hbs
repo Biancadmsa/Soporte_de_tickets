@@ -1,37 +1,3 @@
-{{!< main}} {{!-- NAVBAR --}} <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
-    <div class="container-fluid">
-        <p class="navbar-brand mb-0 text-logo">Soporte de Tickets</p>
-        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar"
-            aria-controls="offcanvasDarkNavbar" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar"
-            aria-labelledby="offcanvasDarkNavbarLabel">
-            <div class="offcanvas-header">
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
-                    aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body" id="navbarNav">
-                <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/tickets">Regresar</a>
-                    </li>
-                </ul>
-                <div class="btn-group">
-                    <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        {{usuario.email}}
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="/logout">Cerrar Sesión</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-    </nav>
-
-
 <div class="container">
   <div class="text-center mt-5">
     <h2>Detalle del Ticket</h2>
@@ -55,6 +21,10 @@
           <th scope="row">Fecha de Creación</th>
           <td>{{ticket.fecha_creacion}}</td>
         </tr>
+        <tr>
+          <th scope="row">Auditado</th>
+          <td>{{#if ticket.auditado}}Sí{{else}}No{{/if}}</td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -76,11 +46,15 @@
 
   {{#if esAdministrador}}
   <div class="mt-5">
-    <h3>Agregar Comentario</h3>
-    <form action="/ticket/{{ticket.id}}/comentario" method="post">
+    <button id="mostrar-formulario" class="btn btn-primary mb-3">Enviar un comentario</button>
+    <form id="comentario-form" class="d-none">
       <div class="mb-3">
         <label for="mensaje" class="form-label">Comentario</label>
         <textarea class="form-control" id="mensaje" name="mensaje" rows="3" required></textarea>
+      </div>
+      <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" id="auditado" name="auditado" value="true" {{#if ticket.auditado}}checked{{/if}}>
+        <label class="form-check-label" for="auditado">Marcar como auditado</label>
       </div>
       <button type="submit" class="btn btn-primary">Agregar Comentario</button>
     </form>
@@ -88,3 +62,32 @@
   {{/if}}
 </div>
 
+<script>
+  document.getElementById('mostrar-formulario').addEventListener('click', function() {
+    document.getElementById('comentario-form').classList.toggle('d-none');
+  });
+
+  document.getElementById('comentario-form').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const mensaje = document.getElementById('mensaje').value;
+    const auditado = document.getElementById('auditado').checked;
+    const ticketId = {{ticket.id}};
+    try {
+      const response = await fetch(`/api/tickets/${ticketId}/comentarios`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ mensaje, auditado })
+      });
+      if (response.ok) {
+        window.location.reload();
+      } else {
+        alert('Error al agregar el comentario');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error al agregar el comentario');
+    }
+  });
+</script>

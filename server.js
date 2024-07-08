@@ -48,6 +48,106 @@ const autenticarToken = (req, res, next) => {
   }
 };
 
+app.post("/api/tickets", autenticarToken, async (req, res) => {
+  try {
+    const { tipo, descripcion } = req.body;
+
+    let tipoResult = await pool.query(
+      "SELECT id FROM tipos WHERE nombre = $1",
+      [tipo]
+    );
+    if (tipoResult.rows.length === 0) {
+      await pool.query("INSERT INTO tipos (nombre) VALUES ($1)", [tipo]);
+      tipoResult = await pool.query("SELECT id FROM tipos WHERE nombre = $1", [
+        tipo,
+      ]);
+    }
+    const id_tipo = tipoResult.rows[0].id;
+
+    const resultado = await pool.query(
+      "INSERT INTO tickets (descripcion, id_usuario, id_tipo) VALUES ($1, $2, $3) RETURNING *",
+      [descripcion, req.usuario.id, id_tipo]
+    );
+    const ticket = resultado.rows[0];
+    res.status(201).json(ticket);
+  } catch (err) {
+    console.error("Error al crear ticket:", err);
+    res.status(500).send("Error al crear ticket");
+  }
+});
+
+app.get("/api/tickets", autenticarToken, async (req, res) => {
+  try {
+    let query = `
+      SELECT tickets.*, usuarios.nombre AS nombre_usuario, tipos.nombre AS tipo
+      FROM tickets
+      JOIN usuarios ON tickets.id_usuario = usuarios.id
+      JOIN tipos ON tickets.id_tipo = tipos.id
+    `;
+    let queryParams = [];
+
+    if (req.usuario.tipo_usuario !== "administrador") {
+      query += " WHERE tickets.id_usuario = $1";
+      queryParams.push(req.usuario.id);
+    } else {
+      query += " WHERE 1=1";
+    }
+
+    const resultado = await pool.query(query, queryParams);
+    const tickets = resultado.rows;
+    res.status(200).json(tickets);
+  } catch (err) {
+    console.error("Error al obtener tickets:", err);
+    res.status(500).send("Error al obtener tickets");
+  }
+});
+
+app.get("/api/tickets/:id", autenticarToken, async (req, res) => {
+  const ticketId = req.params.id;
+  try {
+    const ticketResult = await pool.query(
+      "SELECT tickets.*, usuarios.nombre AS nombre_usuario, tipos.nombre AS tipo FROM tickets JOIN usuarios ON tickets.id_usuario = usuarios.id JOIN tipos ON tickets.id_tipo = tipos.id WHERE tickets.id = $1",
+      [ticketId]
+    );
+    const comentariosResult = await pool.query(
+      "SELECT comentarios.*, usuarios.nombre AS nombre_usuario FROM comentarios JOIN usuarios ON comentarios.id_usuario = usuarios.id WHERE comentarios.id_ticket = $1 ORDER BY comentarios.id",
+      [ticketId]
+    );
+
+    const ticket = ticketResult.rows[0];
+    const comentarios = comentariosResult.rows;
+
+    if (!ticket) {
+      return res.status(404).send("Ticket no encontrado");
+    }
+
+    res.status(200).json({ ticket, comentarios });
+  } catch (err) {
+    console.error("Error al obtener ticket:", err);
+    res.status(500).send("Error al obtener ticket");
+  }
+});
+app.post("/api/tickets/:id/comentarios", autenticarToken, async (req, res) => {
+  const ticketId = req.params.id;
+  const { mensaje } = req.body;
+  try {
+    await pool.query(
+      "INSERT INTO comentarios (id_ticket, id_usuario, mensaje) VALUES ($1, $2, $3)",
+      [ticketId, req.usuario.id, mensaje]
+    );
+    res.status(201).send("Comentario agregado");
+  } catch (err) {
+    console.error("Error al agregar comentario:", err);
+    res.status(500).send("Error al agregar comentario");
+  }
+});
+
+
+
+
+
+// frontend
+
 app.get("/", (req, res) => {
   res.render("home", {
     cssFile: "home.css",
