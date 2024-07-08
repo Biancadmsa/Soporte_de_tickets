@@ -11,21 +11,23 @@ html, body {
     background-color: #181818;
 }
 
-form {
-    max-width: 700px;
-    border: 1px solid #111111; 
-    padding: 40px; 
-    border-radius: 30px;
+form.filter-form {
+    max-width: 70%;
+    border: 1px solid #dcdcdc; /* Border color cambiado a gris claro */
+    border-radius: 5px;
+    width: 100%;
+    margin: auto;
+}
+
+.table-responsive {
+    max-width: 70%;
+    width: 100%;
 }
 
 .text-logo {
     font-size: 1.5rem;
     text-align: center;
     padding-left: 15px;
-}
-
-#tipo, #fecha {
-    border: 1px solid #111111; 
 }
 
 .nav-link {
@@ -36,13 +38,10 @@ form {
     background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><path stroke='rgba(255, 255, 255, 1)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/></svg>");
 }
 
-.btn-outline-primary {
-    margin-right: 10px;
-}
-
 .container {
     flex: 1 0 auto;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
@@ -54,55 +53,21 @@ form {
 .btn-group .btn {
     color: white;
     background-color: #dc3545;
-    width: 200px; 
+    width: 200px;
     text-align: left;
     white-space: nowrap;
 }
 
-.btn-group .dropdown-item {
-    color: white;
-    width: 100%; 
-} 
-
 .btn-group .dropdown-menu {
-    background-color: #343a40; 
+    background-color: #343a40;
     width: 100%;
-} 
+}
+
+.dropdown-item {
+    color: white;
+}
 
 .btn-group .dropdown-item:hover {
-    background-color: #dc3545; 
+    background-color: #dc3545;
     color: white;
-}
-
-.table {
-    margin: auto;
-    width: 80%;
-}
-
-.table th, .table td {
-    text-align: center;
-    vertical-align: middle;
-}
-
-.table th {
-    background-color: #343a40;
-    color: white;
-}
-
-.table-bordered th, .table-bordered td {
-    border: 1px solid #dee2e6;
-}
-
-.btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
-}
-
-.btn-primary:hover {
-    background-color: #0056b3;
-    border-color: #004085;
-}
-
-h2 {
-    padding-top: 15px;
 }

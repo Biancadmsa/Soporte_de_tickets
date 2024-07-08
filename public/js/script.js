@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
   // Iniciar tooltips de Bootstrap
   if ($('[data-toggle="tooltip"]').length) {
     $('[data-toggle="tooltip"]').tooltip();
@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function() {
   // Validación del formulario de login
   const loginForm = document.getElementById("loginForm");
   if (loginForm) {
-    loginForm.addEventListener("submit", function(e) {
+    loginForm.addEventListener("submit", function (e) {
       const email = loginForm.email.value.trim();
       const password = loginForm.password.value.trim();
       if (!email || !password) {
@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const loginButton = document.querySelector('button[type="submit"]');
     if (loginButton) {
-      loginButton.addEventListener("click", function(event) {
+      loginButton.addEventListener("click", function (event) {
         event.preventDefault(); // Prevenir el envío del formulario
         validateLoginForm(); // Llama a la función de validación
       });
@@ -38,9 +38,9 @@ document.addEventListener("DOMContentLoaded", function() {
   // Validación del formulario de registro
   const registroForm = document.getElementById("registroForm");
   if (registroForm) {
-    const registroButton = document.getElementById('registroButton');
+    const registroButton = document.getElementById("registroButton");
     if (registroButton) {
-      registroButton.addEventListener('click', function(event) {
+      registroButton.addEventListener("click", function (event) {
         if (!validateRegistroForm()) {
           event.preventDefault(); // Prevenir el envío del formulario si la validación falla
         }
@@ -48,16 +48,20 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function validateRegistroForm() {
-      const inputUsuario = document.getElementById('inputUsuario');
-      const inputEmail = document.getElementById('inputEmail');
-      const inputPassword = document.getElementById('inputPassword');
+      const inputUsuario = document.getElementById("inputUsuario");
+      const inputEmail = document.getElementById("inputEmail");
+      const inputPassword = document.getElementById("inputPassword");
 
       if (!inputUsuario || !inputEmail || !inputPassword) {
         console.error("Uno o más elementos del formulario no se encontraron.");
         return false;
       }
 
-      if (inputUsuario.value.trim() === '' || inputEmail.value.trim() === '' || inputPassword.value.trim() === '') {
+      if (
+        inputUsuario.value.trim() === "" ||
+        inputEmail.value.trim() === "" ||
+        inputPassword.value.trim() === ""
+      ) {
         showToast("Todos los campos son obligatorios.");
         return false;
       }
@@ -68,9 +72,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
   // Mostrar toast
   function showToast(message) {
-    const toastElement = document.getElementById('liveToast');
+    const toastElement = document.getElementById("liveToast");
     if (toastElement) {
-      const toastBody = toastElement.querySelector('.toast-body');
+      const toastBody = toastElement.querySelector(".toast-body");
       toastBody.textContent = message;
       const toast = new bootstrap.Toast(toastElement);
       toast.show();
@@ -80,7 +84,7 @@ document.addEventListener("DOMContentLoaded", function() {
   // Funcionalidad de ver contraseña en login
   const togglePassword = document.getElementById("togglePassword");
   if (togglePassword) {
-    togglePassword.addEventListener("click", function() {
+    togglePassword.addEventListener("click", function () {
       const password = document.getElementById("password");
       if (password.type === "password") {
         password.type = "text";
@@ -99,14 +103,14 @@ document.addEventListener("DOMContentLoaded", function() {
   if (fechaInput) {
     flatpickr("#fecha", {
       dateFormat: "Y-m-d",
-      locale: "es"
+      locale: "es",
     });
   }
 
   // Configuración específica de ticket.hbs
   const buscarButton = document.getElementById("buscar");
   if (buscarButton) {
-    buscarButton.addEventListener("click", function() {
+    buscarButton.addEventListener("click", function () {
       const tipo = document.getElementById("tipo").value;
       const fecha = document.getElementById("fecha").value;
       console.log("Buscar por:", { tipo, fecha });
@@ -114,14 +118,14 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   // Redirección de página de éxito
-  const fechaRegistroElement = document.getElementById('fechaRegistro');
-  const contadorElement = document.getElementById('contador');
+  const fechaRegistroElement = document.getElementById("fechaRegistro");
+  const contadorElement = document.getElementById("contador");
   if (fechaRegistroElement && contadorElement) {
-    const fechaRegistro = moment().format('LL'); // Formato de fecha de registro
+    const fechaRegistro = moment().format("LL"); // Formato de fecha de registro
     fechaRegistroElement.innerText = `Registrado el: ${fechaRegistro}`;
 
     let tiempo = 6;
-    const interval = setInterval(function() {
+    const interval = setInterval(function () {
       tiempo--;
       contadorElement.innerText = tiempo;
       if (tiempo === 0) {
@@ -132,4 +136,55 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 });
 
+// check list ticket/id
+document
+  .getElementById("comentario-form")
+  .addEventListener("submit", function (event) {
+    var checkbox = document.getElementById("auditado");
+    if (!checkbox.checked) {
+      event.preventDefault();
+      alert("Por favor, marca el check para continuar.");
+      checkbox.focus();
+    }
+  });
 
+// submit ticket_id
+
+document
+  .getElementById("comentario-form")
+  .addEventListener("submit", function (event) {
+    var checkbox = document.getElementById("auditado");
+    if (!checkbox.checked) {
+      event.preventDefault();
+      alert("Por favor, marca el check para continuar.");
+      checkbox.focus();
+      return;
+    }
+
+    event.preventDefault();
+
+    var formData = new FormData(this);
+    var data = {};
+    formData.forEach((value, key) => {
+      data[key] = value;
+    });
+
+    fetch(this.action, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => {
+        if (response.ok) {
+          window.location.href = "/tickets";
+        } else {
+          alert("Hubo un problema al agregar el comentario.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        alert("Hubo un problema al agregar el comentario.");
+      });
+  });

@@ -8,6 +8,27 @@ const cookieParser = require("cookie-parser");
 const pool = require("./db/db");
 const helpers = require("handlebars-helpers")();
 require("dotenv").config();
+const Handlebars = require('handlebars');
+
+
+
+
+Handlebars.registerHelper('formatDate', function(dateString) {
+  if (!dateString) return '';
+  const options = {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  };
+  const date = new Date(dateString);
+  return date.toLocaleString('es-ES', options);
+});
+
+
+
 
 const PORT = process.env.PORT || 3000;
 
@@ -32,6 +53,7 @@ app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "views"));
 
 const SECRET = process.env.SECRET_KEY;
+
 
 const autenticarToken = (req, res, next) => {
   const token = req.cookies.token;
@@ -216,6 +238,9 @@ app.get("/success", (req, res) => {
 app.get("/tickets", autenticarToken, async (req, res) => {
   const { tipo, fecha } = req.query;
   try {
+    const tiposResult = await pool.query("SELECT * FROM tipos");
+    const tipos = tiposResult.rows;
+
     let query = `
       SELECT tickets.*, usuarios.nombre AS nombre_usuario, tipos.nombre AS tipo
       FROM tickets
@@ -248,7 +273,9 @@ app.get("/tickets", autenticarToken, async (req, res) => {
       cssFile: "tickets.css",
       title: "Tickets",
       tickets,
-      usuario: req.usuario
+      tipos,
+      usuario: req.usuario,
+      esAdministrador: req.usuario.tipo_usuario === 'administrador'
     });
   } catch (err) {
     console.error("Error al obtener tickets:", err);
@@ -270,34 +297,26 @@ app.post("/ticket/nuevo", autenticarToken, async (req, res) => {
     const { tipo, descripcion } = req.body;
 
     // Verificar si el tipo existe, si no, agregarlo
-    let tipoResult = await pool.query(
-      "SELECT id FROM tipos WHERE nombre = $1",
-      [tipo]
-    );
+    let tipoResult = await pool.query("SELECT id FROM tipos WHERE nombre = $1", [tipo]);
     if (tipoResult.rows.length === 0) {
       // Insertar nuevo tipo
       await pool.query("INSERT INTO tipos (nombre) VALUES ($1)", [tipo]);
-      tipoResult = await pool.query("SELECT id FROM tipos WHERE nombre = $1", [
-        tipo,
-      ]);
+      tipoResult = await pool.query("SELECT id FROM tipos WHERE nombre = $1", [tipo]);
     }
     const id_tipo = tipoResult.rows[0].id;
-
-    // Insertar el nuevo ticket
-    const resultado = await pool.query(
-      "INSERT INTO tickets (descripcion, id_usuario, id_tipo) VALUES ($1, $2, $3) RETURNING *",
-      [descripcion, req.usuario.id, id_tipo]
-    );
+    const resultado = await pool.query("INSERT INTO tickets (descripcion, id_usuario, id_tipo) VALUES ($1, $2, $3) RETURNING *", [req.body.descripcion, req.usuario.id, id_tipo]);
     const ticket = resultado.rows[0];
 
     // Redirigir a la página de tickets
-    res.redirect(`/ticket/${ticket.id}`);
+    res.redirect('/tickets');
   } catch (err) {
     console.error("Error al crear ticket:", err);
     res.status(500).send("Error al crear ticket");
   }
 });
-app.get('/ticket/:id', autenticarToken, async (req, res) => {
+
+
+app.get("/ticket/:id", autenticarToken, async (req, res) => {
   const ticketId = req.params.id;
   try {
     const ticketResult = await pool.query(
@@ -305,7 +324,7 @@ app.get('/ticket/:id', autenticarToken, async (req, res) => {
       [ticketId]
     );
     const comentariosResult = await pool.query(
-      "SELECT comentarios.*, usuarios.nombre AS nombre_usuario FROM comentarios JOIN usuarios ON comentarios.id_usuario = usuarios.id WHERE comentarios.id_ticket = $1 ORDER BY comentarios.id",
+      "SELECT comentarios.*, usuarios.nombre AS nombre_usuario, comentarios.fecha_creacion FROM comentarios JOIN usuarios ON comentarios.id_usuario = usuarios.id WHERE comentarios.id_ticket = $1 ORDER BY comentarios.id",
       [ticketId]
     );
 
@@ -330,24 +349,30 @@ app.get('/ticket/:id', autenticarToken, async (req, res) => {
   }
 });
 
+
 app.post('/ticket/:id/comentario', autenticarToken, async (req, res) => {
   const ticketId = req.params.id;
-  const { mensaje } = req.body;
+  const { mensaje, auditado } = req.body;
+
   try {
-    if (req.usuario.tipo_usuario !== 'administrador') {
-      return res.status(403).send("No tienes permiso para agregar comentarios");
-    }
     await pool.query(
-      "INSERT INTO comentarios (id_ticket, id_usuario, mensaje) VALUES ($1, $2, $3)",
+      "INSERT INTO comentarios (id_ticket, id_usuario, mensaje, fecha_creacion) VALUES ($1, $2, $3, CURRENT_TIMESTAMP)",
       [ticketId, req.usuario.id, mensaje]
     );
-    res.redirect(`/ticket/${ticketId}`);
+
+    if (req.usuario.tipo_usuario === 'administrador' && auditado === 'true') {
+      await pool.query(
+        "UPDATE tickets SET auditado = $1 WHERE id = $2",
+        [true, ticketId]
+      );
+    }
+
+    res.status(201).json({ success: true });
   } catch (err) {
     console.error("Error al agregar comentario:", err);
-    res.status(500).send("Error al agregar comentario");
+    res.status(500).json({ success: false, error: "Error al agregar comentario" });
   }
 });
-
 
 
 
@@ -382,6 +407,9 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send("Alggo esta mal!");
 });
+
+
+
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);

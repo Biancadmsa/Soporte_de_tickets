@@ -1,9 +1,40 @@
-<div class="container">
-  <div class="text-center mt-5">
-    <h2>Detalle del Ticket</h2>
+{{!< main}}
+
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+  <div class="container-fluid">
+    <p class="navbar-brand mb-0 text-logo">Soporte de Tickets</p>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar"
+      aria-controls="offcanvasDarkNavbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar"
+      aria-labelledby="offcanvasDarkNavbarLabel">
+      <div class="offcanvas-header">
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      <div class="offcanvas-body" id="navbarNav">
+        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+          <li class="nav-item">
+            <a class="nav-link" href="/tickets">Regresar</a>
+          </li>
+        </ul>
+        <div class="btn-group">
+          <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            {{usuario.email}}
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/login">Cerrar Sesión</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="ticket-detalle mb-4">
-    <table class="table table-bordered">
+</nav>
+
+<div class="container mt-5">
+  <h2 class="text-center">Detalle del Ticket</h2>
+  <div class="ticket-detalle mb-2">
+    <table class="table table-bordered wide-table">
       <tbody>
         <tr>
           <th scope="row">ID</th>
@@ -19,42 +50,43 @@
         </tr>
         <tr>
           <th scope="row">Fecha de Creación</th>
-          <td>{{ticket.fecha_creacion}}</td>
-        </tr>
-        <tr>
-          <th scope="row">Auditado</th>
-          <td>{{#if ticket.auditado}}Sí{{else}}No{{/if}}</td>
+          <td>{{formatDate ticket.fecha_creacion}}</td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <div class="comentarios mt-5">
-    <h3>Comentarios</h3>
-    {{#each comentarios}}
-    <div class="comentario mb-4 p-3 border rounded">
-      <div class="d-flex align-items-center mb-2">
-        <img src="/path/to/user-avatar.png" alt="Avatar" class="avatar mr-2">
-        <div class="flex-grow-1">
-          <strong>{{this.nombre_usuario}}</strong>
+  <div class="comentarios">
+    <h3 class="text-center">Comentarios</h3>
+    <div class="row justify-content-center">
+      {{#each comentarios}}
+      <div class="col-12 col-md-10 col-lg-8 col-xl-7 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title text-danger">{{this.nombre_usuario}}</h5>
+            <hr>
+            <p class="card-text">{{this.mensaje}}</p>
+            <hr>
+            <p class="card-text"><small class="text-muted">{{formatDate this.fecha_creacion}}</small></p>
+          </div>
         </div>
       </div>
-      <p>{{this.mensaje}}</p>
+      {{/each}}
     </div>
-    {{/each}}
   </div>
 
   {{#if esAdministrador}}
-  <div class="mt-5">
-    <button id="mostrar-formulario" class="btn btn-primary mb-3">Enviar un comentario</button>
-    <form id="comentario-form" class="d-none">
-      <div class="mb-3">
-        <label for="mensaje" class="form-label">Comentario</label>
-        <textarea class="form-control" id="mensaje" name="mensaje" rows="3" required></textarea>
+  <div class="mt-1 row justify-content-center">
+    <form id="comentario-form" class="col-12 col-md-10 col-lg-8 col-xl-7" action="/ticket/{{ticket.id}}/comentario" method="post">
+      <div class="mb-3 form-floating">
+        <textarea class="form-control" placeholder="Leave a comment here" id="mensaje" name="mensaje" style="height: 100px" required></textarea>
+        <label for="mensaje"><strong>Comentario</strong></label>
       </div>
-      <div class="mb-3 form-check">
-        <input type="checkbox" class="form-check-input" id="auditado" name="auditado" value="true" {{#if ticket.auditado}}checked{{/if}}>
-        <label class="form-check-label" for="auditado">Marcar como auditado</label>
+      <div class="form-check mb-3">
+        <input class="form-check-input custom-checkbox" type="checkbox" value="true" id="auditado" name="auditado" {{#if ticket.auditado}}checked{{/if}}>
+        <label class="form-check-label fw-bold text-danger" for="auditado">
+          Marcar como auditado
+        </label>
       </div>
       <button type="submit" class="btn btn-primary">Agregar Comentario</button>
     </form>
@@ -62,32 +94,13 @@
   {{/if}}
 </div>
 
-<script>
-  document.getElementById('mostrar-formulario').addEventListener('click', function() {
-    document.getElementById('comentario-form').classList.toggle('d-none');
-  });
+<nav aria-label="Page navigation">
+  <ul class="pagination justify-content-center">
+    <li class="page-item"><a class="page-link" href="#">1</a></li>
+    <li class="page-item"><a class="page-link" href="#">2</a></li>
+    <li class="page-item"><a class="page-link" href="#">3</a></li>
+    <li class="page-item"><a class="page-link" href="#">...</a></li>
+    <li class="page-item"><a class="page-link" href="#">20</a></li>
+  </ul>
+</nav>
 
-  document.getElementById('comentario-form').addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const mensaje = document.getElementById('mensaje').value;
-    const auditado = document.getElementById('auditado').checked;
-    const ticketId = {{ticket.id}};
-    try {
-      const response = await fetch(`/api/tickets/${ticketId}/comentarios`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ mensaje, auditado })
-      });
-      if (response.ok) {
-        window.location.reload();
-      } else {
-        alert('Error al agregar el comentario');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Error al agregar el comentario');
-    }
-  });
-</script>

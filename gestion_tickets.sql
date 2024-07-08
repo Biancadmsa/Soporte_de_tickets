@@ -17,26 +17,29 @@ id SERIAL PRIMARY KEY,
 nombre VARCHAR(255) NOT NULL
 );
 
+
 CREATE TABLE tickets (
-id SERIAL PRIMARY KEY,
-descripcion TEXT NOT NULL,
-fecha_creacion DATE DEFAULT CURRENT_DATE,
-fecha_modificacion DATE,
-id_usuario INT NOT NULL,
-id_tipo INT NOT NULL,
-FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
-FOREIGN KEY (id_tipo) REFERENCES tipos(id)
+  id SERIAL PRIMARY KEY,
+  descripcion TEXT NOT NULL,
+  fecha_creacion DATE DEFAULT CURRENT_DATE,
+  fecha_modificacion SET DEFAULT CURRENT_TIMESTAMP;
+  id_usuario INT NOT NULL,
+  id_tipo INT NOT NULL,
+  auditado BOOLEAN DEFAULT false,
+  FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
+  FOREIGN KEY (id_tipo) REFERENCES tipos(id)
 );
+
 
 CREATE TABLE comentarios (
 id SERIAL PRIMARY KEY,
 mensaje TEXT NOT NULL,
 id_usuario INT NOT NULL,
 id_ticket INT NOT NULL,
+fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
 FOREIGN KEY (id_usuario) REFERENCES usuarios(id),
 FOREIGN KEY (id_ticket) REFERENCES tickets(id)
 );
-
 
 
 SELECT * FROM tipos;
@@ -51,6 +54,11 @@ INSERT INTO usuarios (nombre, email, password, tipo_usuario) VALUES
   ('Bianca', 'estudiante@mail.com', 'Abc123#', 'cliente');
 
 
+-- Para tipos de tickets
+INSERT INTO tipos (nombre) VALUES ('Urgente'), ('Importante'), ('Neutro');
+
+-- SE AGREGA COLUMNA PARA LOS AUDITADOS
+ALTER TABLE tickets ADD COLUMN auditado BOOLEAN DEFAULT false;
 
 DELETE FROM usuarios WHERE id > 2;
 
@@ -58,4 +66,11 @@ UPDATE usuarios SET tipo_usuario = 'cliente' WHERE id = 2;
 
 
 
-INSERT INTO tipos (nombre) VALUES ('Urgente'), ('Importante'), ('Neutro');
+SELECT * FROM tipos;
+
+
+psql -U tu_usuario -d tu_base_de_datos
+
+
+
+ALTER TABLE tickets ADD COLUMN auditado BOOLEAN DEFAULT false;
