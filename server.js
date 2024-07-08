@@ -205,7 +205,7 @@ app.get('/ticket/:id', autenticarToken, async (req, res) => {
       [ticketId]
     );
     const comentariosResult = await pool.query(
-      "SELECT comentarios.*, usuarios.nombre AS nombre_usuario FROM comentarios JOIN usuarios ON comentarios.id_usuario = usuarios.id WHERE comentarios.id_ticket = $1 ORDER BY comentarios.fecha_creacion",
+      "SELECT comentarios.*, usuarios.nombre AS nombre_usuario FROM comentarios JOIN usuarios ON comentarios.id_usuario = usuarios.id WHERE comentarios.id_ticket = $1 ORDER BY comentarios.id",
       [ticketId]
     );
 
@@ -221,7 +221,8 @@ app.get('/ticket/:id', autenticarToken, async (req, res) => {
       title: "Detalle del Ticket", 
       ticket, 
       comentarios, 
-      usuario: req.usuario 
+      usuario: req.usuario,
+      esAdministrador: req.usuario.tipo_usuario === 'administrador'
     });
   } catch (err) {
     console.error("Error al obtener ticket:", err);
@@ -246,6 +247,8 @@ app.post('/ticket/:id/comentario', autenticarToken, async (req, res) => {
     res.status(500).send("Error al agregar comentario");
   }
 });
+
+
 
 
 app.get("/ticket/aleatorio", autenticarToken, async (req, res) => {
@@ -277,7 +280,7 @@ app.get("/logout", (req, res) => {
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).send("Something broke!");
+  res.status(500).send("Alggo esta mal!");
 });
 
 app.listen(PORT, () => {

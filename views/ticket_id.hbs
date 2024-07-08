@@ -1,69 +1,90 @@
-{{!< main}}
-
-{{!-- NAVBAR --}}
-<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
-  <div class="container-fluid">
-    <p class="navbar-brand mb-0 text-logo">Soporte de Tickets</p>
-    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas"
-      data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-expanded="false"
-      aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar"
-      aria-labelledby="offcanvasDarkNavbarLabel">
-      <div class="offcanvas-header">
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
-          aria-label="Close"></button>
-      </div>
-      <div class="offcanvas-body" id="navbarNav">
-        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-          <li class="nav-item">
-            <a class="nav-link" href="/tickets">Regresar</a>
-          </li>
-        </ul>
-        <div class="btn-group">
-          <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            {{usuario.email}}
-          </button>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/logout">Cerrar Sesión</a></li>
-          </ul>
+{{!< main}} {{!-- NAVBAR --}} <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+    <div class="container-fluid">
+        <p class="navbar-brand mb-0 text-logo">Soporte de Tickets</p>
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar"
+            aria-controls="offcanvasDarkNavbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar"
+            aria-labelledby="offcanvasDarkNavbarLabel">
+            <div class="offcanvas-header">
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
+                    aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body" id="navbarNav">
+                <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tickets">Regresar</a>
+                    </li>
+                </ul>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        {{usuario.email}}
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/logout">Cerrar Sesión</a></li>
+                    </ul>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-</nav>
+    </nav>
+
+
 <div class="container">
   <div class="text-center mt-5">
     <h2>Detalle del Ticket</h2>
   </div>
-  <div class="table-responsive">
-    <table class="table table-bordered mt-3">
-      <thead class="table-dark">
-        <tr>
-          <th scope="col">Campo</th>
-          <th scope="col">Detalle</th>
-        </tr>
-      </thead>
+  <div class="ticket-detalle mb-4">
+    <table class="table table-bordered">
       <tbody>
         <tr>
-          <td><strong>ID:</strong></td>
+          <th scope="row">ID</th>
           <td>{{ticket.id}}</td>
         </tr>
         <tr>
-          <td><strong>Tipo:</strong></td>
+          <th scope="row">Tipo</th>
           <td>{{ticket.tipo}}</td>
         </tr>
         <tr>
-          <td><strong>Descripción:</strong></td>
+          <th scope="row">Descripción</th>
           <td>{{ticket.descripcion}}</td>
         </tr>
         <tr>
-          <td><strong>Fecha de Creación:</strong></td>
+          <th scope="row">Fecha de Creación</th>
           <td>{{ticket.fecha_creacion}}</td>
         </tr>
       </tbody>
     </table>
   </div>
+
+  <div class="comentarios mt-5">
+    <h3>Comentarios</h3>
+    {{#each comentarios}}
+    <div class="comentario mb-4 p-3 border rounded">
+      <div class="d-flex align-items-center mb-2">
+        <img src="/path/to/user-avatar.png" alt="Avatar" class="avatar mr-2">
+        <div class="flex-grow-1">
+          <strong>{{this.nombre_usuario}}</strong>
+        </div>
+      </div>
+      <p>{{this.mensaje}}</p>
+    </div>
+    {{/each}}
+  </div>
+
+  {{#if esAdministrador}}
+  <div class="mt-5">
+    <h3>Agregar Comentario</h3>
+    <form action="/ticket/{{ticket.id}}/comentario" method="post">
+      <div class="mb-3">
+        <label for="mensaje" class="form-label">Comentario</label>
+        <textarea class="form-control" id="mensaje" name="mensaje" rows="3" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Agregar Comentario</button>
+    </form>
+  </div>
+  {{/if}}
 </div>
 
