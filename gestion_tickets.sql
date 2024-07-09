@@ -66,3 +66,8 @@ psql -U tu_usuario -d tu_base_de_datos
 
 
 
+
+DELETE FROM comentarios;
+DELETE FROM tickets;
+DELETE FROM tipos;
+DELETE FROM usuarios;
