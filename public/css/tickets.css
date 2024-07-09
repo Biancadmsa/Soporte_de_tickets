@@ -13,7 +13,7 @@ html, body {
 
 form.filter-form {
     max-width: 70%;
-    border: 1px solid #dcdcdc; /* Border color cambiado a gris claro */
+    border: 1px solid #dcdcdc; 
     border-radius: 5px;
     width: 100%;
     margin: auto;

@@ -8,27 +8,21 @@ const cookieParser = require("cookie-parser");
 const pool = require("./db/db");
 const helpers = require("handlebars-helpers")();
 require("dotenv").config();
-const Handlebars = require('handlebars');
+const Handlebars = require("handlebars");
 
-
-
-
-Handlebars.registerHelper('formatDate', function(dateString) {
-  if (!dateString) return '';
+Handlebars.registerHelper("formatDate", function (dateString) {
+  if (!dateString) return "";
   const options = {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
   };
   const date = new Date(dateString);
-  return date.toLocaleString('es-ES', options);
+  return date.toLocaleString("es-ES", options);
 });
-
-
-
 
 const PORT = process.env.PORT || 3000;
 
@@ -53,7 +47,6 @@ app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "views"));
 
 const SECRET = process.env.SECRET_KEY;
-
 
 const autenticarToken = (req, res, next) => {
   const token = req.cookies.token;
@@ -97,7 +90,6 @@ app.post("/api/tickets", autenticarToken, async (req, res) => {
     res.status(500).send("Error al crear ticket");
   }
 });
-
 
 app.get("/api/tickets", autenticarToken, async (req, res) => {
   try {
@@ -151,7 +143,7 @@ app.get("/api/tickets/:id", autenticarToken, async (req, res) => {
   }
 });
 
-app.post('/ticket/:id/comentario', autenticarToken, async (req, res) => {
+app.post("/ticket/:id/comentario", autenticarToken, async (req, res) => {
   const ticketId = parseInt(req.params.id, 10);
   if (isNaN(ticketId)) {
     return res.status(400).send("ID del ticket no válido");
@@ -164,26 +156,22 @@ app.post('/ticket/:id/comentario', autenticarToken, async (req, res) => {
       [ticketId, req.usuario.id, mensaje]
     );
 
-    if (req.usuario.tipo_usuario === 'administrador' && auditado === 'true') {
-      await pool.query(
-        "UPDATE tickets SET auditado = $1 WHERE id = $2",
-        [true, ticketId]
-      );
+    if (req.usuario.tipo_usuario === "administrador" && auditado === "true") {
+      await pool.query("UPDATE tickets SET auditado = $1 WHERE id = $2", [
+        true,
+        ticketId,
+      ]);
     }
 
     // Redirigir al cliente a la página del ticket
     res.redirect(`/ticket/${ticketId}`);
   } catch (err) {
     console.error("Error al agregar comentario:", err);
-    res.status(500).json({ success: false, error: "Error al agregar comentario" });
+    res
+      .status(500)
+      .json({ success: false, error: "Error al agregar comentario" });
   }
 });
-
-
-
-
-
-
 
 // frontend
 
@@ -292,14 +280,13 @@ app.get("/tickets", autenticarToken, async (req, res) => {
       tickets,
       tipos,
       usuario: req.usuario,
-      esAdministrador: req.usuario.tipo_usuario === 'administrador'
+      esAdministrador: req.usuario.tipo_usuario === "administrador",
     });
   } catch (err) {
     console.error("Error al obtener tickets:", err);
     res.status(500).send("Error al obtener tickets");
   }
 });
-
 
 app.get("/ticket/nuevo", autenticarToken, (req, res) => {
   res.render("ticket_nuevo", {
@@ -314,18 +301,26 @@ app.post("/ticket/nuevo", autenticarToken, async (req, res) => {
     const { tipo, descripcion } = req.body;
 
     // Verificar si el tipo existe, si no, agregarlo
-    let tipoResult = await pool.query("SELECT id FROM tipos WHERE nombre = $1", [tipo]);
+    let tipoResult = await pool.query(
+      "SELECT id FROM tipos WHERE nombre = $1",
+      [tipo]
+    );
     if (tipoResult.rows.length === 0) {
       // Insertar nuevo tipo
       await pool.query("INSERT INTO tipos (nombre) VALUES ($1)", [tipo]);
-      tipoResult = await pool.query("SELECT id FROM tipos WHERE nombre = $1", [tipo]);
+      tipoResult = await pool.query("SELECT id FROM tipos WHERE nombre = $1", [
+        tipo,
+      ]);
     }
     const id_tipo = tipoResult.rows[0].id;
-    const resultado = await pool.query("INSERT INTO tickets (descripcion, id_usuario, id_tipo) VALUES ($1, $2, $3) RETURNING *", [req.body.descripcion, req.usuario.id, id_tipo]);
+    const resultado = await pool.query(
+      "INSERT INTO tickets (descripcion, id_usuario, id_tipo) VALUES ($1, $2, $3) RETURNING *",
+      [req.body.descripcion, req.usuario.id, id_tipo]
+    );
     const ticket = resultado.rows[0];
 
     // Redirigir a la página de tickets
-    res.redirect('/tickets');
+    res.redirect("/tickets");
   } catch (err) {
     console.error("Error al crear ticket:", err);
     res.status(500).send("Error al crear ticket");
@@ -355,13 +350,13 @@ app.get("/ticket/:id", autenticarToken, async (req, res) => {
       return res.status(404).send("Ticket no encontrado");
     }
 
-    res.render("ticket_id", { 
-      cssFile: "ticket_id.css", 
-      title: "Detalle del Ticket", 
-      ticket, 
-      comentarios, 
+    res.render("ticket_id", {
+      cssFile: "ticket_id.css",
+      title: "Detalle del Ticket",
+      ticket,
+      comentarios,
       usuario: req.usuario,
-      esAdministrador: req.usuario.tipo_usuario === 'administrador'
+      esAdministrador: req.usuario.tipo_usuario === "administrador",
     });
   } catch (err) {
     console.error("Error al obtener ticket:", err);
@@ -369,9 +364,7 @@ app.get("/ticket/:id", autenticarToken, async (req, res) => {
   }
 });
 
-
-
-app.post('/ticket/:id/comentario', autenticarToken, async (req, res) => {
+app.post("/ticket/:id/comentario", autenticarToken, async (req, res) => {
   const ticketId = req.params.id;
   const { mensaje, auditado } = req.body;
 
@@ -381,22 +374,21 @@ app.post('/ticket/:id/comentario', autenticarToken, async (req, res) => {
       [ticketId, req.usuario.id, mensaje]
     );
 
-    if (req.usuario.tipo_usuario === 'administrador' && auditado === 'true') {
-      await pool.query(
-        "UPDATE tickets SET auditado = $1 WHERE id = $2",
-        [true, ticketId]
-      );
+    if (req.usuario.tipo_usuario === "administrador" && auditado === "true") {
+      await pool.query("UPDATE tickets SET auditado = $1 WHERE id = $2", [
+        true,
+        ticketId,
+      ]);
     }
 
     res.status(201).json({ success: true });
   } catch (err) {
     console.error("Error al agregar comentario:", err);
-    res.status(500).json({ success: false, error: "Error al agregar comentario" });
+    res
+      .status(500)
+      .json({ success: false, error: "Error al agregar comentario" });
   }
 });
-
-
-
 
 app.get("/ticket/aleatorio", autenticarToken, async (req, res) => {
   try {
@@ -429,9 +421,6 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send("Alggo esta mal!");
 });
-
-
-
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);

@@ -6,12 +6,11 @@ body {
     justify-content: flex-start;
     align-items: center;
     height: 100vh;
-    background-color: #f8f9fa; /* Fondo ligero para contraste */
+    background-color: #f8f9fa; 
 }
 
 .background-image {
-    background-image: url('/imgs/bienvenido.jpg'); /* Asegúrate de que la ruta sea correcta */
-    background-size: cover;
+    background-image: url('/imgs/bienvenido.jpg'); 
     background-position: center;
     position: fixed;
     top: 0;
@@ -22,18 +21,18 @@ body {
 }
 
 .card {
-    background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco con opacidad */
+    background-color: rgba(255, 255, 255, 0.9); 
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    max-width: 90%; /* Ancho máximo para la tarjeta en tamaños de pantalla pequeños */
+    max-width: 90%; 
     width: 100%;
-    margin: 10% auto; /* Ajusta este valor para centrar la tarjeta más cerca de la cara */
-    transform: translate(-20rem, -10%); /* Mover la tarjeta más a la izquierda y un poco más arriba */
+    margin: 10% auto;
+    transform: translate(-20rem, -10%);
 }
 
 .card-header {
-    background-color: rgba(0, 0, 0, 0.05); /* Fondo ligeramente oscuro para contraste */
+    background-color: rgba(0, 0, 0, 0.05); 
 }
 
 .bienvenido-text {
@@ -63,7 +62,7 @@ body {
     .card {
         max-width: 95%;
         margin: 15% auto;
-        transform: translate(-2rem, -5%); /* Ajuste para pantallas más pequeñas */
+        transform: translate(-2rem, -5%);
     }
 
     #contador {
