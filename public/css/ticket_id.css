@@ -14,13 +14,12 @@ body {
 
 form {
     max-width: 70%;
-    /* Ajuste de ancho */
     border: 1px solid #292828;
     padding: 20px;
     border-radius: 30px;
     width: 100%;
     margin: 20px auto;
-    /* Centrado horizontal */
+   
 }
 
 .text-logo {
@@ -106,4 +105,19 @@ form {
 .form-check-label {
     color: red;
     font-weight: bold;
+}
+
+
+.pagination-nav {
+    margin-top:50vh; /* Ajusta esta medida según sea necesario */
+    background-color: #fff; 
+}
+
+footer {
+    background-color: #181818;
+    text-align: center;
+    padding: 7px 0; 
+    position: relative;
+    bottom: 0;
+    width: 100%;
 }

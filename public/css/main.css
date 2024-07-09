@@ -30,6 +30,16 @@ footer .col-md-1 {
 footer h6 {
     margin: 0; 
 }
+/* footer */
+footer {
+    background-color: #181818;
+    text-align: center;
+    padding: 7px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 1000; /* Asegura que el footer esté por encima de otros elementos */
+}
 
 
 .whatsapp-icon {
