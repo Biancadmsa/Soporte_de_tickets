@@ -38,25 +38,25 @@
 
 
 <div class="container mt-3">
-  <h2 class="text-center">Detalle del Ticket</h2>
-  <div class="ticket-detalle mb-2">
+  <h2 class="text-center text">Detalle del Ticket</h2>
+  <div class="ticket-detalle  mb-2">
     <table class="table table-bordered wide-table">
       <tbody>
-        <tr>
-          <th scope="row">ID</th>
-          <td>{{ticket.id}}</td>
+        <tr> 
+          <th scope="row" class="text-start">ID</th>
+          <td >{{ticket.id}}</td>
         </tr>
         <tr>
-          <th scope="row">Tipo</th>
-          <td>{{ticket.tipo}}</td>
+          <th scope="row" class="text-start">Tipo</th>
+          <td class="text-start">{{ticket.tipo}}</td>
         </tr>
         <tr>
-          <th scope="row">Descripción</th>
-          <td>{{ticket.descripcion}}</td>
+          <th scope="row" class="text-start">Descripción</th>
+          <td class="text-start ">{{ticket.descripcion}}</td>
         </tr>
         <tr>
-          <th scope="row">Fecha de Creación</th>
-          <td>{{formatDate ticket.fecha_creacion}}</td>
+          <th scope="row" class="text-start">Fecha de Creación</th>
+          <td class="text-start">{{formatDate ticket.fecha_creacion}}</td>
         </tr>
       </tbody>
     </table>
@@ -88,7 +88,7 @@
       <div class="mb-3 form-floating">
         <textarea class="form-control" placeholder="Deja un comentario aquí" id="mensaje" name="mensaje"
           style="height: 100px" required></textarea>
-        <label for="mensaje">Escribe un Comentario</label>
+        <label for="mensaje" class="text-start">Escribe un Comentario</label>
       </div>
       <div class="form-check mb-3">
         <input class="form-check-input custom-checkbox" type="checkbox" value="true" id="auditado" name="auditado"

@@ -59,7 +59,9 @@ INSERT INTO tipos (nombre) VALUES ('Urgente'), ('Importante'), ('Neutro');
 
 
 
-
+UPDATE usuarios 
+SET nombre = 'Bianca Salcedo' 
+WHERE nombre = 'Bianca';
 
 psql -U tu_usuario -d tu_base_de_datos
 

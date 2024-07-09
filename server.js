@@ -10,6 +10,20 @@ const helpers = require("handlebars-helpers")();
 require("dotenv").config();
 const Handlebars = require("handlebars");
 
+const PORT = process.env.PORT || 3000;
+const SECRET = process.env.SECRET_KEY;
+
+
+
+const app = express();
+app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: false }));
+app.use(fileUpload());
+app.use(express.static(path.join(__dirname, "public")));
+app.use(cookieParser());
+
+
 Handlebars.registerHelper("formatDate", function (dateString) {
   if (!dateString) return "";
   const options = {
@@ -24,15 +38,6 @@ Handlebars.registerHelper("formatDate", function (dateString) {
   return date.toLocaleString("es-ES", options);
 });
 
-const PORT = process.env.PORT || 3000;
-
-const app = express();
-app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.urlencoded({ extended: false }));
-app.use(fileUpload());
-app.use(express.static(path.join(__dirname, "public")));
-app.use(cookieParser());
 
 app.engine(
   "hbs",
@@ -46,7 +51,7 @@ app.engine(
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "views"));
 
-const SECRET = process.env.SECRET_KEY;
+
 
 const autenticarToken = (req, res, next) => {
   const token = req.cookies.token;
